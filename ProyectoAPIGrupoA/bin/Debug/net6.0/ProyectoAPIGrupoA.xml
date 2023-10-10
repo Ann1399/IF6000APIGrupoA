@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProyectoAPIGrupoA</name>
+    </assembly>
+    <members>
+        <member name="M:ExamenIIRedesAPI.Controllers.PublicController.create(ExamenIIRedesAPI.Models.game)">
+            <summary>
+            Game Search
+            </summary>
+            <remarks>By passing in the appropriate options, you can search for games in the system</remarks>
+             <param name="name">game property to be used as filter</param>
+             <param name="status">property value to match with. When empty should return an empty array</param>
+             <param name="page">game property to be used as filter</param>
+             <param name="limit">game property to be used as filter</param>
+             <response code="200">returns all games</response>
+             
+        </member>
+    </members>
+</doc>
