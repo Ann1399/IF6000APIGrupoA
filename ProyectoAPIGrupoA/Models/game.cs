@@ -9,6 +9,9 @@ namespace ExamenIIRedesAPI.Models
         private gameName name;
         private bool password;
         private List<gamePlayerName> players;
+        private List<gamePlayerName> enemies;
+
+
 
         public game(gameId id, gameName name, bool password)
         {

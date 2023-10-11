@@ -4,12 +4,13 @@ namespace ExamenIIRedesAPI.Util
 {
     public class Utility
     {
-        public static List<game> gameList = new List<game>();
+        //public static List<game> gameList = new List<game>();
 
         public Utility()
         {
 
         }
+            
 
         //        public static bool existGameId(string value)
         //        {
