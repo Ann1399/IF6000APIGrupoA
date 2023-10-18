@@ -2,7 +2,7 @@
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
-namespace ExamenIIRedesAPI.Models
+namespace ProyectoAPIGrupoA.Models
 {
     public class errorMessage
     {

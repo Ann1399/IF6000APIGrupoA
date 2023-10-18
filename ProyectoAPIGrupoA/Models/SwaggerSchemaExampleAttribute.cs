@@ -1,4 +1,4 @@
-﻿namespace ExamenIIRedesAPI.Models
+﻿namespace ProyectoAPIGrupoA.Models
 {
     [AttributeUsage(
         AttributeTargets.Class |

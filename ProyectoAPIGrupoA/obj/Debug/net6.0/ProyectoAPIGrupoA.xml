@@ -4,7 +4,7 @@
         <name>ProyectoAPIGrupoA</name>
     </assembly>
     <members>
-        <member name="M:ExamenIIRedesAPI.Controllers.PublicController.create(ExamenIIRedesAPI.Models.game)">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.create(ProyectoAPIGrupoA.Models.game)">
             <summary>
             Game Search
             </summary>

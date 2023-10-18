@@ -1,6 +1,7 @@
-﻿using ExamenIIRedesAPI.Models;
+﻿
+using ProyectoAPIGrupoA.Models;
 
-namespace ExamenIIRedesAPI.Util
+namespace ProyectoAPIGrupoA.Util
 {
     public class Utility
     {

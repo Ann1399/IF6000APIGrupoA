@@ -1,4 +1,4 @@
-﻿using ExamenIIRedesAPI.Models;
+﻿using ProyectoAPIGrupoA.Models;
 using System.Diagnostics.CodeAnalysis;
 
 namespace ProyectoIIRedesAPI.Models

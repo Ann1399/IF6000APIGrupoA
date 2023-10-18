@@ -2,7 +2,7 @@
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
-namespace ExamenIIRedesAPI.Models
+namespace ProyectoAPIGrupoA.Models
 {
     public class SwaggerSchemaExampleFilter : ISchemaFilter
     {

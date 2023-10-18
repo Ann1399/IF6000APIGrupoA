@@ -1,7 +1,7 @@
 ﻿using ProyectoIIRedesAPI.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ExamenIIRedesAPI.Models
+namespace ProyectoAPIGrupoA.Models
 {
     public class game
     {

@@ -1,4 +1,4 @@
-﻿using ExamenIIRedesAPI.Models;
+﻿using ProyectoAPIGrupoA.Models;
 using Microsoft.OpenApi.Any;
 
 namespace ProyectoIIRedesAPI.Models

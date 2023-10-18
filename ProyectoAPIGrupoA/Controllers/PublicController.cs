@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using ExamenIIRedesAPI.Models;
+using ProyectoAPIGrupoA.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ExamenIIRedesAPI.Controllers
+namespace ProyectoAPIGrupoA.Controllers
 {
     [Produces("application/json")]
     [Route("/api/games/")]

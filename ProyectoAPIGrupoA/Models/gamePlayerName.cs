@@ -1,4 +1,4 @@
-﻿using ExamenIIRedesAPI.Models;
+﻿using ProyectoAPIGrupoA.Models;
 
 namespace ProyectoIIRedesAPI.Models
 {
