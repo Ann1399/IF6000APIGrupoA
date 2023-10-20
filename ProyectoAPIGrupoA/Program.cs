@@ -1,3 +1,5 @@
+using Swashbuckle.AspNetCore.SwaggerUI;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,9 +15,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        //Allow to add addition attribute info on doc. like [MaxLength(50)]
+        c.ConfigObject = new ConfigObject
+        {
+            ShowCommonExtensions = true
+        };
+    });
 }
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

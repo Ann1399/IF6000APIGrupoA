@@ -10,11 +10,58 @@
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "6.0.7",
           "Newtonsoft.Json": "13.0.1",
+          "Swagger-Net": "8.4.19.1",
           "Swashbuckle.AspNetCore": "6.2.3",
           "Swashbuckle.AspNetCore.Annotations": "6.4.0"
         },
         "runtime": {
           "ProyectoAPIGrupoA.dll": {}
+        }
+      },
+      "FromHeaderAttribute/2.0.4": {
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Core": "5.2.4",
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "runtime": {
+          "lib/net45/FromHeaderAttribute.dll": {
+            "assemblyVersion": "2.0.4.0",
+            "fileVersion": "2.0.4.0"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.Client/5.2.4": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
+          "Newtonsoft.Json.Bson": "1.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Net.Http.Formatting.dll": {
+            "assemblyVersion": "5.2.4.0",
+            "fileVersion": "5.2.60201.0"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.Core/5.2.4": {
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.4"
+        },
+        "runtime": {
+          "lib/net45/System.Web.Http.dll": {
+            "assemblyVersion": "5.2.4.0",
+            "fileVersion": "5.2.60201.0"
+          }
+        }
+      },
+      "Microsoft.AspNet.WebApi.WebHost/5.2.4": {
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Core": "5.2.4"
+        },
+        "runtime": {
+          "lib/net45/System.Web.Http.WebHost.dll": {
+            "assemblyVersion": "5.2.4.0",
+            "fileVersion": "5.2.60201.0"
+          }
         }
       },
       "Microsoft.AspNetCore.JsonPatch/6.0.7": {
@@ -68,6 +115,20 @@
           "lib/netstandard2.0/Newtonsoft.Json.Bson.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.2.22727"
+          }
+        }
+      },
+      "Swagger-Net/8.4.19.1": {
+        "dependencies": {
+          "FromHeaderAttribute": "2.0.4",
+          "Microsoft.AspNet.WebApi.Core": "5.2.4",
+          "Microsoft.AspNet.WebApi.WebHost": "5.2.4",
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "runtime": {
+          "lib/net45/Swagger.Net.dll": {
+            "assemblyVersion": "8.4.19.1",
+            "fileVersion": "8.4.19.1"
           }
         }
       },
@@ -128,6 +189,34 @@
       "serviceable": false,
       "sha512": ""
     },
+    "FromHeaderAttribute/2.0.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3ahKB+yJ/BBa2A7neyUOCDxhh9D9dCZsRQQ3PBmkgmLL+ACK3G/EQ6WwQwneObbR63t6m5bgPynDLJBrkkBybA==",
+      "path": "fromheaderattribute/2.0.4",
+      "hashPath": "fromheaderattribute.2.0.4.nupkg.sha512"
+    },
+    "Microsoft.AspNet.WebApi.Client/5.2.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-OdBVC2bQWkf9qDd7Mt07ev4SwIdu6VmLBMTWC0D5cOP/HWSXyv/77otwtXVrAo42duNjvXOjzjP5oOI9m1+DTQ==",
+      "path": "microsoft.aspnet.webapi.client/5.2.4",
+      "hashPath": "microsoft.aspnet.webapi.client.5.2.4.nupkg.sha512"
+    },
+    "Microsoft.AspNet.WebApi.Core/5.2.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rbLh178vmOWxhFQgiVkKmZyG53XEdyBZJbCsV36a4VxokIBzSRYUaMkXWEwJTy83PoHhPiDHNQFN3A3BQzwhtg==",
+      "path": "microsoft.aspnet.webapi.core/5.2.4",
+      "hashPath": "microsoft.aspnet.webapi.core.5.2.4.nupkg.sha512"
+    },
+    "Microsoft.AspNet.WebApi.WebHost/5.2.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lTc0tMsblsm+xYBpJgCyA3uS4IZA7oo+vGkdO69S+QqZZNIv84UXwM4UPJP1MDR0BHYQVlLGZMxeqvo6z9oKOQ==",
+      "path": "microsoft.aspnet.webapi.webhost/5.2.4",
+      "hashPath": "microsoft.aspnet.webapi.webhost.5.2.4.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.JsonPatch/6.0.7": {
       "type": "package",
       "serviceable": true,
@@ -176,6 +265,13 @@
       "sha512": "sha512-QYFyxhaABwmq3p/21VrZNYvCg3DaEoN/wUuw5nmfAf0X3HLjgupwhkEWdgfb9nvGAUIv3osmZoD3kKl4jxEmYQ==",
       "path": "newtonsoft.json.bson/1.0.2",
       "hashPath": "newtonsoft.json.bson.1.0.2.nupkg.sha512"
+    },
+    "Swagger-Net/8.4.19.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dGmKQM9czLJH0vJR570VHbWpiCfyNrCd5L2iUruzTndkWU1xYDrVxlufuxeX0gQHcM7+WuInrDF6zFMQ9CHNDg==",
+      "path": "swagger-net/8.4.19.1",
+      "hashPath": "swagger-net.8.4.19.1.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.2.3": {
       "type": "package",

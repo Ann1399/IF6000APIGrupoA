@@ -1,9 +1,10 @@
-﻿using ProyectoAPIGrupoA.Models;
+using ProyectoAPIGrupoA.Models;
 
 namespace ProyectoIIRedesAPI.Models
 {
     public class gamePlayerName
     {
+        [StringLength(20, MinimumLength = 3)]
         private string playerName;
 
         public gamePlayerName(string playerName)
@@ -12,6 +13,7 @@ namespace ProyectoIIRedesAPI.Models
         }
 
         [SwaggerSchemaExample("Thanos")]
+        [StringLength(20, MinimumLength = 3)]
         public string PlayerName { get => playerName; set => playerName = value; }
     }
 }
