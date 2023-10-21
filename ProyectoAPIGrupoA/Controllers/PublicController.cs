@@ -66,10 +66,10 @@ namespace ProyectoAPIGrupoA.Controllers
         ///<remarks>Request the creation of a new game</remarks>
         ///<param name="game">Game info</param>
         [HttpPost]
-        [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(BaseResponse))] //Agregar el data
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(BaseResponse))]
-        [SwaggerResponse(StatusCodes.Status409Conflict, Type = typeof(BaseResponse))]
-        public IActionResult create([FromBody] game game)
+        [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(errorMessage))] //Agregar el data
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(errorMessage))]
+        [SwaggerResponse(StatusCodes.Status409Conflict, Type = typeof(errorMessage))]
+        public IActionResult create([FromBody] GameBase gamebase)
         {
             //if (!ModelState.IsValid)
             //{
@@ -89,7 +89,7 @@ namespace ProyectoAPIGrupoA.Controllers
 
             //{
 
-            //game game1 = new Game(game.Name, game.Owner, game.Password);
+            //game game1 = new game(game.Name, game.Owner, game.Password);
 
             //Util.Utility.gameList.Add(game1);
 

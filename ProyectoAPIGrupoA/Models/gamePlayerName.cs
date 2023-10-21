@@ -1,4 +1,5 @@
 using ProyectoAPIGrupoA.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoIIRedesAPI.Models
 {

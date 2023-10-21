@@ -5,7 +5,7 @@ namespace ProyectoAPIGrupoA.Util
 {
     public class Utility
     {
-        //public static List<game> gameList = new List<game>();
+        public static List<game> gameList = new List<game>();
 
         public Utility()
         {

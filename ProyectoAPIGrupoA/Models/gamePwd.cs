@@ -1,5 +1,6 @@
 ﻿using ProyectoAPIGrupoA.Models;
 using Microsoft.OpenApi.Any;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoIIRedesAPI.Models
 {
@@ -13,6 +14,7 @@ namespace ProyectoIIRedesAPI.Models
         }
 
         [SwaggerSchemaExample("Shazam!")]
+        [StringLength(20, MinimumLength = 3)]
         public string Password { get => password; set => password = value; }
     }
 }

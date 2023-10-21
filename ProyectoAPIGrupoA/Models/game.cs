@@ -18,14 +18,10 @@ namespace ProyectoAPIGrupoA.Models
         private GameStatus status;
         private roundId currentRound;
 
-        public game(gameId id, gameName name, bool password)
+        public game()
         {
-            this.id = id;
-            this.name = name;
-            this.password = password;
             
-            this.status = new GameStatus();
-            this.currentRound = new roundId();
+
         }
 
         public gameId Id { get => id; set => id = value; }
