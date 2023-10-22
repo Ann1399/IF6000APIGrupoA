@@ -20,8 +20,13 @@
             <summary>
             Game Create
             </summary>
-            <remarks>Request the creation of a new game</remarks>
-            <param name="game">Game info</param>
+            <remarks>By passing in the appropriate options, you can search for games in the system</remarks>
+             <param name="name">game property to be used as filter</param>
+             <param name="status">property value to match with. When empty should return an empty array</param>
+             <param name="page">game property to be used as filter</param>
+             <param name="limit">game property to be used as filter</param>
+             <response code="200">Game Created</response>
+            
         </member>
     </members>
 </doc>

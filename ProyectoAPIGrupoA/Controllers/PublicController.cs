@@ -63,8 +63,9 @@ namespace ProyectoAPIGrupoA.Controllers
         ///<summary>
         ///Game Create
         ///</summary>
-        ///<remarks>Request the creation of a new game</remarks>
-        ///<param name="game">Game info</param>
+        ///<remarks>By passing in the appropriate options, you can create a game.Password is optional</remarks>
+        /// <response code="200">Game Created</response>
+        ///
         [HttpPost]
 
         [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(errorMessage))] //Agregar el data
@@ -73,32 +74,28 @@ namespace ProyectoAPIGrupoA.Controllers
 
         public IActionResult create([FromBody] GameBase gamebase)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return StatusCode(406, new ErrorMsg("missing game owner or password parameters"));
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(406, new errorMessage("missing game owner or password parameters",406));
 
-            //}
+            }
 
-            //if (name == null || name == "" || game.Name == null || game.Password == null || game.Name == "")
+            if (gamebase.Name == null || gamebase.Name == "" || gamebase.Name == null || gamebase.Owner == null || gamebase.Owner == "")
 
-            //{
+            {
 
-            //    return StatusCode(406, new ErrorMsg("missing name header or game name parameters"));
+                return StatusCode(406, new errorMessage("missing name header or game name parameters",406));
 
-            //}
+            }
 
-            //else
+            else{
 
-            //{
+            game game1 = new game(gamebase.Name, gamebase.Owner, gamebase.Password);      
+            Util.Utility.gameList.Add(game1);
+            BaseResponse br = new BaseResponse("Game Created!", 201,game1);
+            return StatusCode(201, br);
 
-            //game game1 = new game(game.Name, game.Owner, game.Password);
-
-            //Util.Utility.gameList.Add(game1);
-
-            //return StatusCode(201, game1);
-
-            //}
-
+            }
 
             return null;
 
