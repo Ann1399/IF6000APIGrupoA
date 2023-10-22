@@ -1,7 +1,6 @@
-using ProyectoAPIGrupoA.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProyectoIIRedesAPI.Models
+namespace ProyectoAPIGrupoA.Models
 {
     public class gamePlayerName
     {

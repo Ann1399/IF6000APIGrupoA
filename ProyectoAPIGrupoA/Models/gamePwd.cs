@@ -1,5 +1,4 @@
 ﻿using ProyectoAPIGrupoA.Models;
-using Microsoft.OpenApi.Any;
 using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoIIRedesAPI.Models

@@ -12,6 +12,6 @@ namespace ProyectoAPIGrupoA.Controllers
     /// </summary>
     public class PlayersController : ControllerBase
     {
-        
+
     }
 }

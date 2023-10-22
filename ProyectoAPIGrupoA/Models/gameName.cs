@@ -1,7 +1,4 @@
-﻿using ProyectoAPIGrupoA.Models;
-using System.Diagnostics.CodeAnalysis;
-
-namespace ProyectoIIRedesAPI.Models
+﻿namespace ProyectoAPIGrupoA.Models
 {
     public class gameName
     {

@@ -8,24 +8,24 @@ namespace ProyectoAPIGrupoA.Models
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            if(context.MemberInfo != null)
+            if (context.MemberInfo != null)
             {
                 var schemaAttribute = context.MemberInfo.GetCustomAttributes<SwaggerSchemaExampleAttribute>().FirstOrDefault();
-                if(schemaAttribute != null)
+                if (schemaAttribute != null)
                 {
-                    ApplySchemaAttribute(schema,schemaAttribute);
+                    ApplySchemaAttribute(schema, schemaAttribute);
                 }
             }
         }
 
         private void ApplySchemaAttribute(OpenApiSchema schema, SwaggerSchemaExampleAttribute schemaAttribute)
         {
-            if(schemaAttribute.Example != null)
+            if (schemaAttribute.Example != null)
             {
                 schema.Example = new Microsoft.OpenApi.Any.OpenApiString(schemaAttribute.Example);
             }
         }
 
-        
+
     }
 }

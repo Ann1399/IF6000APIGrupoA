@@ -1,7 +1,7 @@
 ﻿
 namespace ProyectoAPIGrupoA.Models
 {
-    public class gameId 
+    public class gameId
     {
         private string id;
         private static Random random = new Random();

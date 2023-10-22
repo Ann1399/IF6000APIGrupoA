@@ -5,9 +5,9 @@
         AttributeTargets.Struct |
         AttributeTargets.Parameter |
         AttributeTargets.Property |
-        AttributeTargets.Enum,AllowMultiple =false
+        AttributeTargets.Enum, AllowMultiple = false
     )]
-    public class SwaggerSchemaExampleAttribute:Attribute
+    public class SwaggerSchemaExampleAttribute : Attribute
     {
         public SwaggerSchemaExampleAttribute(string example)
         {

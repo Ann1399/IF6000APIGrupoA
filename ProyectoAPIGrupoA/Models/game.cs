@@ -1,7 +1,4 @@
-﻿using ProyectoAPIGrupoA.Models;
-using ProyectoIIRedesAPI.Models;
-using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -20,7 +17,7 @@ namespace ProyectoAPIGrupoA.Models
 
         public game()
         {
-            
+
 
         }
 
@@ -30,26 +27,17 @@ namespace ProyectoAPIGrupoA.Models
 
         public GameStatus Status { get => status; set => status = value; }
         public roundId CurrentRound { get => currentRound; set => currentRound = value; }
-        [StringLength(10,MinimumLength = 1)]
+        [StringLength(10, MinimumLength = 1)]
         public List<gamePlayerName> Players { get => players; set => players = value; }
         [StringLength(5, MinimumLength = 0)]
-        public List<gamePlayerName> Enemies { get => players; set => players = value; }
+        public List<gamePlayerName> Enemies { get => enemies; set => enemies = value; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public  enum GameStatus
+        public enum GameStatus
         {
-            Lobby ,
-            Rounds ,
-            Ended 
-        }
-        public class RoundModel
-        {
-            public string RoundId { get; set; }
-            public string RoundName { get; set; }
-
-            // Otras propiedades relacionadas con la ronda
-
-            // Constructor, métodos, etc., según sea necesario
+            Lobby,
+            Rounds,
+            Ended
         }
     }
 }

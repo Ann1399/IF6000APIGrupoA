@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 using ProyectoAPIGrupoA.Models;
+using Swashbuckle.AspNetCore.Annotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,7 +10,7 @@ namespace ProyectoAPIGrupoA.Controllers
     [Route("/api/games/")]
     public class PublicController : ControllerBase
     {
-       
+
         ///<summary>
         ///Game Search
         ///</summary>
@@ -21,15 +21,15 @@ namespace ProyectoAPIGrupoA.Controllers
         /// <param name="limit">game property to be used as filter</param>
         /// <response code="200">returns all games</response>
         /// 
-        
         [HttpGet]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        //public List<GameGet> Get(string? name, string? status, Int32 page, Int32 limit)
-        //{
-            
+        public List<game> Get(string? name, string? status, Int32 page, Int32 limit,List<round> result )
+        {
+
         //    if (status == "status")
         //    {
-        //        List<GameGet> games = new List<GameGet>();
+                
+                List<game> games = new List<game>();
 
         //        for (int i = 0; i < Util.Utility.gameList.Count(); i++)
         //        {
@@ -55,10 +55,10 @@ namespace ProyectoAPIGrupoA.Controllers
         //            games.Add(game);
 
         //        }
-        //        return games;
+               return games;
         //    }
 
-        //}
+        }
 
         ///<summary>
         ///Game Create
@@ -66,9 +66,11 @@ namespace ProyectoAPIGrupoA.Controllers
         ///<remarks>Request the creation of a new game</remarks>
         ///<param name="game">Game info</param>
         [HttpPost]
+
         [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(errorMessage))] //Agregar el data
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(errorMessage))]
         [SwaggerResponse(StatusCodes.Status409Conflict, Type = typeof(errorMessage))]
+
         public IActionResult create([FromBody] GameBase gamebase)
         {
             //if (!ModelState.IsValid)

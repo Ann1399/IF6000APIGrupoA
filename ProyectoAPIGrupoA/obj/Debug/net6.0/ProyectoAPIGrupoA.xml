@@ -4,7 +4,7 @@
         <name>ProyectoAPIGrupoA</name>
     </assembly>
     <members>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.create(ProyectoAPIGrupoA.Models.GameBase)">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.List{ProyectoAPIGrupoA.Models.round})">
             <summary>
             Game Search
             </summary>
@@ -15,6 +15,13 @@
              <param name="limit">game property to be used as filter</param>
              <response code="200">returns all games</response>
              
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.create(ProyectoAPIGrupoA.Models.GameBase)">
+            <summary>
+            Game Create
+            </summary>
+            <remarks>Request the creation of a new game</remarks>
+            <param name="game">Game info</param>
         </member>
     </members>
 </doc>

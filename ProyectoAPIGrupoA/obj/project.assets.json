@@ -643,19 +643,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
+    "C:\\Users\\ExtremeTech\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\OneDrive\\Escritorio\\Proyecto\\IF6000APIGrupoA\\ProyectoAPIGrupoA\\ProyectoAPIGrupoA.csproj",
+      "projectUniqueName": "C:\\Users\\ExtremeTech\\Desktop\\RedesII\\IF6000APIGrupoA\\ProyectoAPIGrupoA\\ProyectoAPIGrupoA.csproj",
       "projectName": "ProyectoAPIGrupoA",
-      "projectPath": "C:\\Users\\Admin\\OneDrive\\Escritorio\\Proyecto\\IF6000APIGrupoA\\ProyectoAPIGrupoA\\ProyectoAPIGrupoA.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\OneDrive\\Escritorio\\Proyecto\\IF6000APIGrupoA\\ProyectoAPIGrupoA\\obj\\",
+      "projectPath": "C:\\Users\\ExtremeTech\\Desktop\\RedesII\\IF6000APIGrupoA\\ProyectoAPIGrupoA\\ProyectoAPIGrupoA.csproj",
+      "packagesPath": "C:\\Users\\ExtremeTech\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ExtremeTech\\Desktop\\RedesII\\IF6000APIGrupoA\\ProyectoAPIGrupoA\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ExtremeTech\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -663,7 +663,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -722,7 +721,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   },
