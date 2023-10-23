@@ -23,16 +23,14 @@ namespace ProyectoAPIGrupoA.Models
         {
             this.msg = msg;
             this.status = status;
-            object[] arregloDeObjetosVacio = new object[0];
-            this.data = arregloDeObjetosVacio;
             object[] arregloDeObjetosVacioAux = new object[0];
             this.others = arregloDeObjetosVacioAux;
         }
-        [Required]
-        public string Msg { get => msg; set => msg = value; }
 
         [Required]
         public int Status { get => status; set => status = value; }
+        [Required]
+        public string Msg { get => msg; set => msg = value; }    
         public Object Data { get => data; set => data = value; }
         public Object Others {  get => others; set => others = value; }
     }

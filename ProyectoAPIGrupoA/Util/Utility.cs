@@ -1,6 +1,9 @@
 ﻿
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
+using System.Collections.Generic;
 using System.Text.Json.Nodes;
 
 namespace ProyectoAPIGrupoA.Util
@@ -67,56 +70,76 @@ namespace ProyectoAPIGrupoA.Util
             return jsonObject;
         }
 
-        //        public static bool existGameId(string value)
-        //        {
-        //            bool gameExist=false;
-        //            for (int i = 0; i < gameList.Count(); i++)
-        //            {
-        //                if (gameList[i].GameId == value)
-        //                {
-        //                    gameExist=true; 
-        //                }
+        public static bool existGameId(string value)
+        {
+            bool gameExist = false;
+            for (int i = 0; i < gameList.Count(); i++)
+            {
+                gameId id = gameList[i].Id;
+                if (id.Id == value)
+                {
+                    gameExist = true;
+                }
 
 
-        //            }
-        //            return gameExist;
+            }
+            return gameExist;
 
 
-        //        }
+        }
 
-        //        public static async Task<bool> existOwner(Game game, string value)
-        //        {
-        //            bool gameExist = false;
+        public static async Task<bool> existOwner(game game, string value)
+        {
+            bool gameExist = false;
 
-        //                if (game.Owner == value)
-        //                {
-        //                    gameExist = true;
-        //                }
-
-
-
-        //            return gameExist;
-
-
-        //        }
-        //        public static bool existPlayer(Game game, string value)
-        //        {
-        //            bool playerExist = false; 
-        //            for(int j=0; j < game.Players.Count(); j++)
-        //            {
-        //                if (game.Players[j] == value)
-        //                {
-        //                    playerExist=true;
-        //                }
-
-        //            }
+            if (game.Owner == value)
+            {
+                gameExist = true;
+            }
 
 
 
-        //            return playerExist;
+            return gameExist;
 
 
-        //        }
+        }
+        public static bool existPlayer(game game, string value)
+        {
+            bool playerExist = false;
+            for (int j = 0; j < game.Players.Count(); j++)
+            {
+                if (game.Players[j].PlayerName == value)
+                {
+                    playerExist = true;
+                }
+
+            }
+
+
+
+            return playerExist;
+
+
+        }
+
+        public static bool existGame(string value)
+        {
+            bool gameExist = false;
+            for (int i = 0; i < gameList.Count(); i++)
+            {
+                gameName id = gameList[i].Name;
+                if (id.Name == value)
+                {
+                    gameExist = true;
+                }
+
+
+            }
+            return gameExist;
+
+        }
+
+
 
         //       public static bool verifyPlayersCount(Game game, int count)
         //        {
@@ -251,20 +274,96 @@ namespace ProyectoAPIGrupoA.Util
 
         //        }
 
-        //        public static Game getGame(string gameId)
+        //public static Game getGameId(string gameId)
+        //{
+        //Game game = null;
+        //    //for (int i = 0; i < gameList.Count(); i++)
+        //    {
+        //        if (gameList[i].GameId == gameId)
         //        {
-        //            Game game= null;
-        //            for (int i = 0; i < gameList.Count(); i++)
-        //            {
-        //                if (gameList[i].GameId == gameId)
-        //                {
-        //                    game = gameList[i];
-        //                }
-
-
-        //            }
-        //            return game;
+        //            game = gameList[i];
         //        }
+
+
+        //    }
+        //    return game;
+        //}
+
+        public static List<JObject> getGames(string? name, string? status, Int32? page, Int32? limit)
+        {
+            List<JObject> gameL = new List<JObject>();
+
+            for(int i = 0; i < limit; i++)
+            {
+                if (i < gameList.Count())
+                {
+                    if (status != null && gameList[i].Status.ToString() == status)
+                    {
+                        string json = JsonConvert.SerializeObject(gameList[i]);
+                        JObject jsonObject = JObject.Parse(json);
+                        gameL.Add(jsonObject);
+                    }
+                    else if (status == null && gameList[i].Status.ToString() == "lobby")
+                    {
+                        string json = JsonConvert.SerializeObject(gameList[i]);
+                        JObject jsonObject = JObject.Parse(json);
+                        gameL.Add(jsonObject);
+                    }
+                }
+                else { break; }
+            }
+
+            return gameL;
+        }
+
+        public static JObject errorsToBaseResposne(List<JObject> l, BaseResponse br)
+        {
+            string json = JsonConvert.SerializeObject(br);
+            JObject jsonObject = JObject.Parse(json);
+
+            JArray dataArray = new JArray();
+            foreach (var g in l)
+            {
+                dataArray.Add(g);
+            }
+            jsonObject["Others"] = dataArray;
+            return jsonObject;
+        }
+
+        //errores para Create Game
+        public static List<JObject> getErrors(string? name, string? owner, string? password)
+        {
+            List<JObject> eL = new List<JObject>();
+            if (existGame(name))
+            {
+                errorMessage e = new errorMessage("Game already exists",400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (name.Length < 3 || name.Length > 20 || name == null)
+            {
+                errorMessage e = new errorMessage("Invalid or missing game name", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (owner.Length < 3 || owner.Length > 20 || owner == null)
+            {
+                errorMessage e = new errorMessage("Invalid or missing game owner", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (password.Length < 3 || password.Length > 20)
+            {
+                errorMessage e = new errorMessage("Invalid password", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            return eL;
+        }
 
         //        public static bool verifyPlayerSelection(Game game, string name)//Verifica si el jugador ya eligió un camino
         //        {
@@ -341,13 +440,13 @@ namespace ProyectoAPIGrupoA.Util
         //            return verify;
         //        }
 
-        //        public static string getRandomLeader(Game game)
-        //        {
-        //            Random rd = new Random();
-        //            int rand_num = rd.Next(0, (game.Players.Count()-1));
-        //            return game.Players[rand_num];
+        public static string getRandomLeader(game game)
+        {
+            Random rd = new Random();
+            int rand_num = rd.Next(0, (game.Players.Count() - 1));
+            return game.Players[rand_num].PlayerName;
 
-        //        }
+        }
 
         //        public static bool verifyGameWinner(Game game)//Verifica si hay un bando ya es ganador
         //        {

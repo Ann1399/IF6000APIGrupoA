@@ -38,7 +38,7 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
     options.EnableAnnotations();
-    options.SchemaFilter<OpenApiCustomSchemaFilter>();
+    options.SchemaFilter<SwaggerSchemaExampleFilter>();
 });
 
 var app = builder.Build();
@@ -54,6 +54,8 @@ app.UseSwaggerUI(c =>
 
 
     });
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

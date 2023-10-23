@@ -1,14 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
+using ProyectoAPIGrupoA.Util;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.Json.Nodes;
+using System.Xml.Linq;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProyectoAPIGrupoA.Controllers
 {
+    
     [Produces("application/json")]
     [Route("/api/games/")]
     public class PublicController : ControllerBase
@@ -24,42 +30,51 @@ namespace ProyectoAPIGrupoA.Controllers
         /// <param name="limit">game property to be used as filter</param>
         /// <response code="200">returns all games</response>
         /// 
+        
         [HttpGet]
+        [Tags("Public","Players")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public List<game> Get(string? name, string? status, Int32 page, Int32 limit,List<round> result )
+        public ActionResult Get(string? name, string? status, Int32 page, Int32 limit)
         {
 
-        //    if (status == "status")
-        //    {
-                
-                List<game> games = new List<game>();
+            BaseResponse game = new BaseResponse("Games found",200);
+            List<JObject> list = Util.Utility.getGames(name,status,page,limit);
+            foreach (var g in list)
+            {
 
-        //        for (int i = 0; i < Util.Utility.gameList.Count(); i++)
-        //        {
-        //            if (Util.Utility.gameList[i].Status == status)
-        //            {
-        //                GameGet game = new GameGet(Util.Utility.gameList[i].GameId, Util.Utility.gameList[i].Name);
-        //                games.Add(game);
-        //            }
+                //copiar RoundId
+                JObject x1 = (JObject)g.SelectToken("CurrentRound");
+                string idValue1 = (string)g["CurrentRound"]["Id"];
+                x1.Remove("Id");
+                g["CurrentRound"] = idValue1;
 
+                //copiar Id
+                JObject x2 = (JObject)g.SelectToken("Id");
+                string idValue2 = (string)g["Id"]["Id"];
+                x2.Remove("Id");
+                g["Id"] = idValue2;
 
-        //        }
-        //        return games;
+                //copiar Nombre
+                JObject x3 = (JObject)g.SelectToken("Name");
+                string idValue3 = (string)g["Name"]["Name"];
+                x3.Remove("Name");
+                g["Name"] = idValue3;
 
-        //    }
-        //    else
-        //    {
-        //        List<GameGet> games = new List<GameGet>();
+                //copiar Jugadores
+                Util.Utility.ConvertirObjetoPlayersAArray(g);
+                Util.Utility.ConvertirPropiedadesAMinuscula(g);
+            }
+            string jsonString = JsonSerializer.Serialize(game);
 
-        //        for (int i = 0; i < Util.Utility.gameList.Count(); i++)
-        //        {
-
-        //            GameGet game = new GameGet(Util.Utility.gameList[i].GameId, Util.Utility.gameList[i].Name);
-        //            games.Add(game);
-
-        //        }
-               return games;
-        //    }
+            JObject rss = JObject.Parse(jsonString);
+            JArray dataArray = new JArray();
+            foreach (var g in list)
+            {
+                dataArray.Add(g);
+            }
+            rss["Data"] = dataArray;
+            Util.Utility.ConvertirPropiedadesAMinuscula(rss);
+            return StatusCode(406, rss); ;
 
         }
 
@@ -70,10 +85,10 @@ namespace ProyectoAPIGrupoA.Controllers
         /// <response code="200">Game Created</response>
         ///
         [HttpPost]
-
-        [SwaggerResponse(StatusCodes.Status201Created, Type = typeof(errorMessage))] //Agregar el data
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(errorMessage))]
-        [SwaggerResponse(StatusCodes.Status409Conflict, Type = typeof(errorMessage))]
+        [Tags("Public", "Players")]
+        [Swagger.Net.Annotations.SwaggerResponse(StatusCodes.Status201Created, Type = typeof(errorMessage))] //Agregar el data
+        [Swagger.Net.Annotations.SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(errorMessage))]
+        [Swagger.Net.Annotations.SwaggerResponse(StatusCodes.Status409Conflict, Type = typeof(errorMessage))]
 
         public IActionResult create([FromBody] GameBase gamebase)
         {
@@ -90,11 +105,38 @@ namespace ProyectoAPIGrupoA.Controllers
                 return StatusCode(406, new errorMessage("missing name header or game name parameters",406));
 
             }
+            if (Util.Utility.existGame(gamebase.Name))
+            {
+                return StatusCode(409, new errorMessage("Game already exists", 409));
+            }
+            if (gamebase.Name.Length < 3 || gamebase.Name.Length > 20 || gamebase.Name == null)
+            {
+                BaseResponse br = new BaseResponse("Invalid or missing game name",400);
+                List<JObject> list = Util.Utility.getErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
+                JObject rs = Util.Utility.errorsToBaseResposne(list,br);
+                return StatusCode(400,Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (gamebase.Owner.Length < 3 || gamebase.Owner.Length > 20 || gamebase.Owner == null)
+            {
+                BaseResponse br = new BaseResponse("Invalid or missing game owner", 400);
+                List<JObject> list = Util.Utility.getErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (gamebase.Password.Length < 3 || gamebase.Password.Length > 20)
+            {
+                BaseResponse br = new BaseResponse("Invalid password", 400);
+                List<JObject> list = Util.Utility.getErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            else
+            {
 
-            else{
-
-            game game1 = new game(gamebase.Name, gamebase.Owner, gamebase.Password);      
+            game game1 = new game(gamebase.Name, gamebase.Owner, gamebase.Password);    
+            //se agrega juego a la lista
             Util.Utility.gameList.Add(game1);
+
             BaseResponse br = new BaseResponse("Game Created!", 201,game1);
 
 
@@ -117,16 +159,11 @@ namespace ProyectoAPIGrupoA.Controllers
 
                 //copiar Nombre
                 JObject x3 = (JObject)customers.SelectToken("Name");
-                string idValue3 = (string)customers["Name"]["Id"];
-                x3.Remove("Id");
+                string idValue3 = (string)customers["Name"]["Name"];
+                x3.Remove("Name");
                 customers["Name"] = idValue3;
 
                 //copiar Jugadores
-                //JObject x4 = (JObject)customers.SelectToken("Players");
-                //string idValue4 = (string)customers["Players"]["PlayerName"];
-                //x4.Remove("PlayerName");
-                //customers["Players"] = idValue4;
-
                 Util.Utility.ConvertirObjetoPlayersAArray(rss);
                 Util.Utility.ConvertirPropiedadesAMinuscula(rss);
 

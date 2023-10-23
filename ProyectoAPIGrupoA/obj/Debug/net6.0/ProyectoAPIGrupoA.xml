@@ -4,7 +4,7 @@
         <name>ProyectoAPIGrupoA</name>
     </assembly>
     <members>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.String,System.Int32,System.Int32,System.Collections.Generic.List{ProyectoAPIGrupoA.Models.round})">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Game Search
             </summary>

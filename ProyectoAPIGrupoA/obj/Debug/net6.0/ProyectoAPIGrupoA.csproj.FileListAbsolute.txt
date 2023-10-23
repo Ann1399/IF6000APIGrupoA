@@ -125,3 +125,4 @@ C:\Users\ExtremeTech\Desktop\RedesII\IF6000APIGrupoA\ProyectoAPIGrupoA\obj\Debug
 C:\Users\ExtremeTech\Desktop\RedesII\IF6000APIGrupoA\ProyectoAPIGrupoA\obj\Debug\net6.0\ProyectoAPIGrupoA.pdb
 C:\Users\ExtremeTech\Desktop\RedesII\IF6000APIGrupoA\ProyectoAPIGrupoA\obj\Debug\net6.0\ProyectoAPIGrupoA.genruntimeconfig.cache
 C:\Users\ExtremeTech\Desktop\RedesII\IF6000APIGrupoA\ProyectoAPIGrupoA\obj\Debug\net6.0\ref\ProyectoAPIGrupoA.dll
+C:\Users\ExtremeTech\Desktop\RedesII\IF6000APIGrupoA\ProyectoAPIGrupoA\bin\Debug\net6.0\NSwag.Annotations.dll

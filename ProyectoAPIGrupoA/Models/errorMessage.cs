@@ -14,10 +14,11 @@ namespace ProyectoAPIGrupoA.Models
         }
 
         [Required]
-        [SwaggerSchemaExample("Explain the error to the user here")]
-        public string Message { get => message; set => message = value; }
+        public int Status { get => code; set => code = value; }
 
         [Required]
-        public int Code { get => code; set => code = value; }
+        [SwaggerSchemaExample("Explain the error to the user here")]
+        public string Msg { get => message; set => message = value; }
+ 
     }
 }

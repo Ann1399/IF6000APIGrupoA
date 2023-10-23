@@ -164,6 +164,19 @@
           }
         }
       },
+      "NSwag.Annotations/13.20.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/NSwag.Annotations.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/NSwag.Annotations.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Swagger-Net/8.4.19.1": {
         "type": "package",
         "dependencies": {
@@ -512,6 +525,24 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
+    "NSwag.Annotations/13.20.0": {
+      "sha512": "eujjioff/+DVb15fm1hpMJ3XeESgn/XBbiZtKkVGQmab3W3yEd84O8a5tlQhboWdPSlYm7fpZKEln2tG4lyMCw==",
+      "type": "package",
+      "path": "nswag.annotations/13.20.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "NuGetIcon.png",
+        "lib/net45/NSwag.Annotations.dll",
+        "lib/net45/NSwag.Annotations.xml",
+        "lib/netstandard1.0/NSwag.Annotations.dll",
+        "lib/netstandard1.0/NSwag.Annotations.xml",
+        "lib/netstandard2.0/NSwag.Annotations.dll",
+        "lib/netstandard2.0/NSwag.Annotations.xml",
+        "nswag.annotations.13.20.0.nupkg.sha512",
+        "nswag.annotations.nuspec"
+      ]
+    },
     "Swagger-Net/8.4.19.1": {
       "sha512": "dGmKQM9czLJH0vJR570VHbWpiCfyNrCd5L2iUruzTndkWU1xYDrVxlufuxeX0gQHcM7+WuInrDF6zFMQ9CHNDg==",
       "type": "package",
@@ -636,6 +667,7 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 6.0.7",
+      "NSwag.Annotations >= 13.20.0",
       "Newtonsoft.Json >= 13.0.1",
       "Swagger-Net >= 8.4.19.1",
       "Swashbuckle.AspNetCore >= 6.2.3",
@@ -684,6 +716,10 @@
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
             "target": "Package",
             "version": "[6.0.7, )"
+          },
+          "NSwag.Annotations": {
+            "target": "Package",
+            "version": "[13.20.0, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",

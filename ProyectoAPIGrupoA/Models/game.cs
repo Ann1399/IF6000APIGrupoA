@@ -14,6 +14,8 @@ namespace ProyectoAPIGrupoA.Models
         private gameName name;
         private string owner;
         private bool password;
+        [Newtonsoft.Json.JsonIgnore]
+        private string pdw;
         private string createdAt { get; set; }
         private string updatedAt { get; set; }
         private List<gamePlayerName> players;
@@ -31,11 +33,12 @@ namespace ProyectoAPIGrupoA.Models
             this.players = new List<gamePlayerName>();
             if(password != null && password != "") {
                 this.password = true;
+                this.pdw = password;
             }
             this.players.Add(new gamePlayerName(owner));
             this.currentRound = new roundId("0000000000000000000000000");
             this.enemies = new List<gamePlayerName>();
-            this.status = GameStatus.Lobby;
+            this.status = GameStatus.lobby;
             DateTime fechaActual = DateTime.Now;
             this.createdAt = fechaActual.ToString("yyyy-MM-dd HH:mm:ss");
             this.updatedAt = fechaActual.ToString("yyyy-MM-dd HH:mm:ss");
@@ -56,9 +59,9 @@ namespace ProyectoAPIGrupoA.Models
         [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
         public enum GameStatus
         {
-            Lobby,
-            Rounds,
-            Ended
+            lobby,
+            rounds,
+            ended
         }
     }
 }

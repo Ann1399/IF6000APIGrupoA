@@ -9,6 +9,7 @@
       "ProyectoAPIGrupoA/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "6.0.7",
+          "NSwag.Annotations": "13.20.0",
           "Newtonsoft.Json": "13.0.1",
           "Swagger-Net": "8.4.19.1",
           "Swashbuckle.AspNetCore": "6.2.3",
@@ -115,6 +116,14 @@
           "lib/netstandard2.0/Newtonsoft.Json.Bson.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.2.22727"
+          }
+        }
+      },
+      "NSwag.Annotations/13.20.0": {
+        "runtime": {
+          "lib/netstandard2.0/NSwag.Annotations.dll": {
+            "assemblyVersion": "13.20.0.0",
+            "fileVersion": "13.20.0.0"
           }
         }
       },
@@ -265,6 +274,13 @@
       "sha512": "sha512-QYFyxhaABwmq3p/21VrZNYvCg3DaEoN/wUuw5nmfAf0X3HLjgupwhkEWdgfb9nvGAUIv3osmZoD3kKl4jxEmYQ==",
       "path": "newtonsoft.json.bson/1.0.2",
       "hashPath": "newtonsoft.json.bson.1.0.2.nupkg.sha512"
+    },
+    "NSwag.Annotations/13.20.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eujjioff/+DVb15fm1hpMJ3XeESgn/XBbiZtKkVGQmab3W3yEd84O8a5tlQhboWdPSlYm7fpZKEln2tG4lyMCw==",
+      "path": "nswag.annotations/13.20.0",
+      "hashPath": "nswag.annotations.13.20.0.nupkg.sha512"
     },
     "Swagger-Net/8.4.19.1": {
       "type": "package",
