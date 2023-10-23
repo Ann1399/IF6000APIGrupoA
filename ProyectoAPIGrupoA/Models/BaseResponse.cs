@@ -15,6 +15,8 @@ namespace ProyectoAPIGrupoA.Models
             this.msg = msg;
             this.status = status;
             this.data = data;
+            object[] arregloDeObjetosVacio = new object[0];
+            this.others = arregloDeObjetosVacio;
         }
 
         public BaseResponse(string msg, int status)
@@ -23,6 +25,8 @@ namespace ProyectoAPIGrupoA.Models
             this.status = status;
             object[] arregloDeObjetosVacio = new object[0];
             this.data = arregloDeObjetosVacio;
+            object[] arregloDeObjetosVacioAux = new object[0];
+            this.others = arregloDeObjetosVacioAux;
         }
         [Required]
         public string Msg { get => msg; set => msg = value; }

@@ -1,12 +1,16 @@
 ﻿
 
+using Newtonsoft.Json;
+using System.Runtime.Serialization;
+
 namespace ProyectoAPIGrupoA.Models
 {
     public class roundId
     {
+
         private string roundid;
         private static Random random = new Random();
-
+        
         public roundId()
         {
             this.roundid = idRound();

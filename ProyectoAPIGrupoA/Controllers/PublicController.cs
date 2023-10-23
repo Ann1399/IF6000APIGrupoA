@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -93,7 +96,41 @@ namespace ProyectoAPIGrupoA.Controllers
             game game1 = new game(gamebase.Name, gamebase.Owner, gamebase.Password);      
             Util.Utility.gameList.Add(game1);
             BaseResponse br = new BaseResponse("Game Created!", 201,game1);
-            return StatusCode(201, br);
+
+
+                string jsonString = JsonSerializer.Serialize(br);
+
+                JObject rss = JObject.Parse(jsonString); 
+                JObject customers = (JObject)rss.SelectToken("Data");
+
+                //copiar RoundId
+                JObject x1 = (JObject)customers.SelectToken("CurrentRound");
+                string idValue1 = (string)customers["CurrentRound"]["Id"];
+                x1.Remove("Id");
+                customers["CurrentRound"] = idValue1;
+
+                //copiar Id
+                JObject x2 = (JObject)customers.SelectToken("Id");
+                string idValue2 = (string)customers["Id"]["Id"];
+                x2.Remove("Id");
+                customers["Id"] = idValue2;
+
+                //copiar Nombre
+                JObject x3 = (JObject)customers.SelectToken("Name");
+                string idValue3 = (string)customers["Name"]["Id"];
+                x3.Remove("Id");
+                customers["Name"] = idValue3;
+
+                //copiar Jugadores
+                //JObject x4 = (JObject)customers.SelectToken("Players");
+                //string idValue4 = (string)customers["Players"]["PlayerName"];
+                //x4.Remove("PlayerName");
+                //customers["Players"] = idValue4;
+
+                Util.Utility.ConvertirObjetoPlayersAArray(rss);
+                Util.Utility.ConvertirPropiedadesAMinuscula(rss);
+
+                return StatusCode(201, rss);
 
             }
 
@@ -101,5 +138,8 @@ namespace ProyectoAPIGrupoA.Controllers
 
 
         }
+        
+
     }
+
 }

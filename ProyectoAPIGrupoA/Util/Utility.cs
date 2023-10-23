@@ -1,5 +1,7 @@
 ﻿
+using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
+using System.Text.Json.Nodes;
 
 namespace ProyectoAPIGrupoA.Util
 {
@@ -11,7 +13,59 @@ namespace ProyectoAPIGrupoA.Util
         {
 
         }
+        public static JObject ConvertirPropiedadesAMinuscula(JObject jsonObject)
+        {
+            foreach (var property in jsonObject.Properties().ToList())
+            {
+                string nuevaClave = char.ToLower(property.Name[0]) + property.Name.Substring(1);
+                property.AddAfterSelf(new JProperty(nuevaClave, property.Value));
+                property.Remove();
+            }
 
+            foreach (var property in jsonObject.Properties())
+            {
+                if (property.Value.Type == JTokenType.Object)
+                {
+                    ConvertirPropiedadesAMinuscula((JObject)property.Value);
+                }
+                else if (property.Value.Type == JTokenType.Array)
+                {
+                    foreach (var item in property.Value.Children())
+                    {
+                        if (item.Type == JTokenType.Object)
+                        {
+                            ConvertirPropiedadesAMinuscula((JObject)item);
+                        }
+                    }
+                }
+            }
+            return jsonObject;
+        }
+
+        public static JObject ConvertirObjetoPlayersAArray(JObject jsonObject)
+        {
+            JProperty playersProperty = jsonObject.DescendantsAndSelf().OfType<JProperty>()
+             .FirstOrDefault(p => p.Name.Equals("Players", StringComparison.OrdinalIgnoreCase));
+
+            if (playersProperty != null)
+            {
+                // Obtener el valor de la propiedad "Players"
+                JToken playersValue = playersProperty.Value;
+
+                if (playersValue.Type == JTokenType.Array)
+                {
+                    // Filtrar objetos "players" y obtener nombres de jugadores
+                    var playerNames = playersValue.Children()
+                        .Where(player => player["PlayerName"] != null)
+                        .Select(player => (string)player["PlayerName"])
+                        .ToList();
+
+                    // Reemplazar la propiedad "Players" con un arreglo de nombres de jugadores
+                    playersProperty.Value = JArray.FromObject(playerNames);
+                }
+            }
+            return jsonObject;
+        }
 
         //        public static bool existGameId(string value)
         //        {

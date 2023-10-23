@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace ProyectoAPIGrupoA.Models
 {
     public class round
     {
+        [IgnoreDataMember]
         private roundId id;
         private gamePlayerName leader;
         private roundStatus status;
@@ -17,7 +19,6 @@ namespace ProyectoAPIGrupoA.Models
         {
 
         }
-
         public roundId Id { get =>id; set => id = value; }
         public gamePlayerName Leader { get => leader; set => leader = value; }
 
