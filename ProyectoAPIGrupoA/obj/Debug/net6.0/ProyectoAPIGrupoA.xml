@@ -4,6 +4,17 @@
         <name>ProyectoAPIGrupoA</name>
     </assembly>
     <members>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.Get(System.String,ProyectoIIRedesAPI.Models.gamePwd,System.String)">
+            <summary>
+            Get Game
+            </summary>
+            <remarks>Gets the content of a game. Returns an error if it doesn't exist</remarks>
+             <param name="gameId"></param>
+             <param name="password"></param>
+             <param name="player"></param>
+             <response code="200">returns all games</response>
+             
+        </member>
         <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Game Search

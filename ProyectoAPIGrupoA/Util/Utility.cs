@@ -274,20 +274,20 @@ namespace ProyectoAPIGrupoA.Util
 
         //        }
 
-        //public static Game getGameId(string gameId)
-        //{
-        //Game game = null;
-        //    //for (int i = 0; i < gameList.Count(); i++)
-        //    {
-        //        if (gameList[i].GameId == gameId)
-        //        {
-        //            game = gameList[i];
-        //        }
+        public static game getGameId(string gameId)
+        {
+            game game=null;
+            for (int i = 0; i < gameList.Count(); i++)
+            {
+                if (gameList[i].Id.Id == gameId)
+                {
+                    game = gameList[i];
+                }
 
 
-        //    }
-        //    return game;
-        //}
+            }
+            return game;
+        }
 
         public static List<JObject> getGames(string? name, string? status, Int32? page, Int32? limit)
         {
