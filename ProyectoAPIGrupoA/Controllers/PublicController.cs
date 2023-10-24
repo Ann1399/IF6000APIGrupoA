@@ -74,7 +74,7 @@ namespace ProyectoAPIGrupoA.Controllers
             }
             rss["Data"] = dataArray;
             Util.Utility.ConvertirPropiedadesAMinuscula(rss);
-            return StatusCode(406, rss); ;
+            return StatusCode(200, rss); 
 
         }
 
@@ -85,7 +85,7 @@ namespace ProyectoAPIGrupoA.Controllers
         /// <response code="200">Game Created</response>
         ///
         [HttpPost]
-        [Tags("Public", "Players")]
+        [Tags("Players", "Public")]
         [Swagger.Net.Annotations.SwaggerResponse(StatusCodes.Status201Created, Type = typeof(errorMessage))] //Agregar el data
         [Swagger.Net.Annotations.SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(errorMessage))]
         [Swagger.Net.Annotations.SwaggerResponse(StatusCodes.Status409Conflict, Type = typeof(errorMessage))]

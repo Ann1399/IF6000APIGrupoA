@@ -365,6 +365,33 @@ namespace ProyectoAPIGrupoA.Util
             return eL;
         }
 
+        public static List<JObject> getJoinErrors(string? name, string? password, string id)
+        {
+            List<JObject> eL = new List<JObject>();
+            if (existGame(name))
+            {
+                errorMessage e = new errorMessage("Game already exists", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (name.Length < 3 || name.Length > 20 || name == null)
+            {
+                errorMessage e = new errorMessage("Invalid or missing game name", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if ((password.Length < 3 || password.Length > 20|| getGameId(id).Id.Id != password)&&getGameId(id).Password==true)
+            {
+                errorMessage e = new errorMessage("Invalid password", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            return eL;
+        }
+
         //        public static bool verifyPlayerSelection(Game game, string name)//Verifica si el jugador ya eligió un camino
         //        {
         //            bool verify = false;

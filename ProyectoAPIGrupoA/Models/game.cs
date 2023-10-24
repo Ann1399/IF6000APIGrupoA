@@ -54,8 +54,10 @@ namespace ProyectoAPIGrupoA.Models
         [StringLength(5, MinimumLength = 0)]
         public List<gamePlayerName> Enemies { get => enemies; set => enemies = value; }
         public roundId CurrentRound { get => currentRound; set => currentRound = value; }
-        public gameId Id { get => id; set => id = value; }     
-        
+        public gameId Id { get => id; set => id = value; }
+        [Newtonsoft.Json.JsonIgnore]
+        public string Pdw { get => pdw; set => pdw = value; }
+
         [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
         public enum GameStatus
         {

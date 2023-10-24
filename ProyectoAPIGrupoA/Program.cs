@@ -63,6 +63,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
+
+app.UseHsts(); // Habilita HTTP Strict Transport Security (HSTS) para solicitudes HTTPS
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
