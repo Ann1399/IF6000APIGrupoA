@@ -1,17 +1,20 @@
 ﻿
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace ProyectoAPIGrupoA.Util
 {
     public class Utility
     {
         public static List<game> gameList = new List<game>();
-
+        public static List<round> roundList = new List<round>();
         public Utility()
         {
 
@@ -70,13 +73,13 @@ namespace ProyectoAPIGrupoA.Util
             return jsonObject;
         }
 
-        public static bool existGameId(string value)
+        public static bool existGameId(string idGame)
         {
             bool gameExist = false;
             for (int i = 0; i < gameList.Count(); i++)
             {
                 gameId id = gameList[i].Id;
-                if (id.Id == value)
+                if (id.Id == idGame)
                 {
                     gameExist = true;
                 }
@@ -88,6 +91,22 @@ namespace ProyectoAPIGrupoA.Util
 
         }
 
+        public static bool existRoundId(string idRound)
+        {
+            bool roundExist = false;
+            for (int i = 0; i < roundList.Count(); i++)
+            {
+                roundId id = roundList[i].Id;
+                if (id.Id == idRound)
+                {
+                    roundExist = true;
+                }
+
+            }
+            return roundExist;
+
+
+        }
         public static async Task<bool> existOwner(game game, string value)
         {
             bool gameExist = false;
@@ -112,13 +131,8 @@ namespace ProyectoAPIGrupoA.Util
                 {
                     playerExist = true;
                 }
-
             }
-
-
-
             return playerExist;
-
 
         }
 
@@ -292,8 +306,9 @@ namespace ProyectoAPIGrupoA.Util
         public static List<JObject> getGames(string? name, string? status, Int32? page, Int32? limit)
         {
             List<JObject> gameL = new List<JObject>();
+            var converter = new StringEnumConverter();
 
-            for(int i = 0; i < limit; i++)
+            for (int i = 0; i < limit; i++)
             {
                 if (i < gameList.Count())
                 {
@@ -305,7 +320,7 @@ namespace ProyectoAPIGrupoA.Util
                     }
                     else if (status == null && gameList[i].Status.ToString() == "lobby")
                     {
-                        string json = JsonConvert.SerializeObject(gameList[i]);
+                        string json = JsonConvert.SerializeObject(gameList[i],converter);
                         JObject jsonObject = JObject.Parse(json);
                         gameL.Add(jsonObject);
                     }
@@ -541,29 +556,30 @@ namespace ProyectoAPIGrupoA.Util
         //            return verify;
         //        }
 
-        //        public static int getPsychosCount(Game game)
-        //        {
-        //            if (game.Players.Count() == 5 || game.Players.Count() == 6)
-        //            {
-        //                return 2;
-        //            }else if(game.Players.Count() == 7 || game.Players.Count() == 8 || game.Players.Count() == 9)
-        //            {
-        //                return 3;
-        //            }
-        //            else
-        //            {
-        //                return 4;
-        //            }
-        //        }
+        public static int getpsychoscountAtStart(game game)
+        {
+            if (game.Players.Count() == 5 || game.Players.Count() == 6)
+            {
+                return 2;
+            }
+            else if (game.Players.Count() == 7 || game.Players.Count() == 8 || game.Players.Count() == 9)
+            {
+                return 3;
+            }
+            else
+            {
+                return 4;
+            }
+        }
 
-        //        public static bool verifyPlayersCount(Game game)
-        //        {
-        //            bool verify = true;
-        //            if (game.Players.Count() < 5)
-        //            {
-        //                verify = false;
-        //            }
-        //            return verify;
-        //        }
+        public static bool verifyPlayersCount(game game)
+        {
+            bool verify = true;
+            if (game.Players.Count() < 5)
+            {
+                verify = false;
+            }
+            return verify;
+        }
     }
 }

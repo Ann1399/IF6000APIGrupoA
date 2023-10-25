@@ -66,7 +66,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHsts(); // Habilita HTTP Strict Transport Security (HSTS) para solicitudes HTTPS
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
@@ -74,6 +74,23 @@ app.UseRouting();
 
 app.UseCors("GetAllPolicy");
 
-app.MapControllers();
+app.MapWhen(context => context.Request.IsHttps, app =>
+{
+   // app.UseHttpsRedirection(); // Redirige solicitudes HTTPS
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+});
+
+app.MapWhen(context => !context.Request.IsHttps, app =>
+{
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+});
+
+app.Run();
 
 app.Run();

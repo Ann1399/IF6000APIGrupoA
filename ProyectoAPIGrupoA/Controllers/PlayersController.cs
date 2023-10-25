@@ -5,6 +5,8 @@ using ProyectoAPIGrupoA.Models;
 using ProyectoIIRedesAPI.Models;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
+using System.Security.Cryptography;
 using System.Text.Json;
 
 
@@ -139,7 +141,62 @@ namespace ProyectoAPIGrupoA.Controllers
 
             return StatusCode(201, rss);
         }
+        ///<summary>
+        ///Game Start
+        ///</summary>
+        [HttpHead]
+        [Tags("Players")]
+        [Route("/api/games/{gameId}/start/")]
+        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
+        public ActionResult gameStart([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
+        {
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(406, new errorMessage("missing game owner or password parameters", 406));
+            }
+            if ( Util.Utility.getGameId(gameId) == null)
+            {
 
-    }
+                Response.Headers.Add("status", "404 Not Found");
+                Response.Headers.Add("x-msg", "Game does not exists");
+                
+                return StatusCode(404);
+            }
+            if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId),player)==false)
+            {
+                
+                Response.Headers.Add("status", "409 Conflict");
+                Response.Headers.Add("x-msg", "Player is already part of the game");
+
+                return StatusCode(409);
+            }
+            if (Util.Utility.verifyPlayersCount(Util.Utility.getGameId(gameId)))
+            {
+                Response.Headers.Add("status", "428 Precondition Required ");
+                Response.Headers.Add("x-msg", "Need 5 players to start.");
+
+                return StatusCode(428);
+            }
+            if (Util.Utility.getGameId(gameId).Status.ToString() != "lobby ")
+            {
+                Response.Headers.Add("status", "409 Game already started");
+                Response.Headers.Add("x-msg", "Game already started.");
+
+                return StatusCode(409);
+            }
+
+            game g = Util.Utility.getGameId(gameId);
+
+            int enemiesC = Util.Utility.getpsychoscountAtStart(g);
+
+            for(int i=0; i < g.Players.Count(); i++)
+            {
+
+            }
+
+
+            return StatusCode(200, "");
+        }
+        }
 
 }

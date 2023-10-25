@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Newtonsoft.Json.Converters;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel;
@@ -14,13 +14,14 @@ namespace ProyectoAPIGrupoA.Models
         private gameName name;
         private string owner;
         private bool password;
-        [Newtonsoft.Json.JsonIgnore]
+        [IgnoreDataMember]
         private string pdw;
         private string createdAt { get; set; }
         private string updatedAt { get; set; }
         private List<gamePlayerName> players;
         private List<gamePlayerName> enemies;
         [DefaultValue("lobby")]
+        [JsonConverter(typeof(StringEnumConverter))]
         private GameStatus status;
         private roundId currentRound;
 
@@ -45,6 +46,7 @@ namespace ProyectoAPIGrupoA.Models
         }
         public gameName Name { get => name; set => name = value; }
         public string Owner{ get => owner; set => owner = value; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public GameStatus Status { get => status; set => status = value; }
         public string CreatedAt { get => createdAt; set => createdAt = value; }
         public string UpdatedAt { get => updatedAt; set => updatedAt = value; }
@@ -55,15 +57,9 @@ namespace ProyectoAPIGrupoA.Models
         public List<gamePlayerName> Enemies { get => enemies; set => enemies = value; }
         public roundId CurrentRound { get => currentRound; set => currentRound = value; }
         public gameId Id { get => id; set => id = value; }
-        [Newtonsoft.Json.JsonIgnore]
+        [IgnoreDataMember]
         public string Pdw { get => pdw; set => pdw = value; }
 
-        [System.Text.Json.Serialization.JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum GameStatus
-        {
-            lobby,
-            rounds,
-            ended
-        }
+        
     }
 }

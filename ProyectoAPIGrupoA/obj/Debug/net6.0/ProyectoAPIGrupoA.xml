@@ -20,6 +20,11 @@
             Join Game
             </summary>
         </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.gameStart(System.String,System.String,System.String)">
+            <summary>
+            Game Start
+            </summary>
+        </member>
         <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Game Search

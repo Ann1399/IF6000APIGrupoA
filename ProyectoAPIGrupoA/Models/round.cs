@@ -12,12 +12,19 @@ namespace ProyectoAPIGrupoA.Models
         private roundResult result;
         private roundPhase phase;
         private List<gamePlayerName> group;
+        private gameId gameId;
         private roundVote votes;
 
 
-        public round()
+        public round(gameId id)
         {
-
+            this.id = new roundId();
+            this.gameId = id;
+            this.status = roundStatus.waiting_on_leader;
+            this.result = roundResult.none;
+            this.phase = roundPhase.vote1;
+            this.group = new List<gamePlayerName>();
+            this.votes = new roundVote();
         }
         public roundId Id { get =>id; set => id = value; }
         public gamePlayerName Leader { get => leader; set => leader = value; }
@@ -28,7 +35,7 @@ namespace ProyectoAPIGrupoA.Models
         public List<gamePlayerName> Group { get => group; set => group = value; }
 
         public roundVote Votes { get => votes; set => votes = value; }
-
+        public gameId GameId { get => gameId; set => gameId = value; }
     }
 
 

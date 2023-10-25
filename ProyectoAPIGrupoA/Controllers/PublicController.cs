@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
 using ProyectoAPIGrupoA.Util;
@@ -62,9 +63,9 @@ namespace ProyectoAPIGrupoA.Controllers
 
                 //copiar Jugadores
                 Util.Utility.ConvertirObjetoPlayersAArray(g);
-                Util.Utility.ConvertirPropiedadesAMinuscula(g);
+                //Util.Utility.ConvertirPropiedadesAMinuscula(g);
             }
-            string jsonString = JsonSerializer.Serialize(game);
+            string jsonString = JsonConvert.SerializeObject(game);
 
             JObject rss = JObject.Parse(jsonString);
             JArray dataArray = new JArray();
@@ -140,7 +141,7 @@ namespace ProyectoAPIGrupoA.Controllers
             BaseResponse br = new BaseResponse("Game Created!", 201,game1);
 
 
-                string jsonString = JsonSerializer.Serialize(br);
+                string jsonString = JsonConvert.SerializeObject(br);
 
                 JObject rss = JObject.Parse(jsonString); 
                 JObject customers = (JObject)rss.SelectToken("Data");
