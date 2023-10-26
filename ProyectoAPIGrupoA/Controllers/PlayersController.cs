@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -243,6 +243,14 @@ namespace ProyectoAPIGrupoA.Controllers
             round r = Util.Utility.getRoundId(gameId, roundId);
             return StatusCode(200, r);
         }
+        ///<summary>
+        ///Vote Group
+        ///</summary>
+        [HttpPost]
+        [Tags("Players")]
+        [Route("/api/games/{gameId}/rounds/{roundId}")]
+        public ActionResult voteGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [Required][FromBody] bool vote)
+        {
 
 
         ///<summary>

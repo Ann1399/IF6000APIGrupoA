@@ -35,6 +35,11 @@
             Show Round
             </summary>
         </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.voteGroup(System.String,System.String,System.String,System.String,System.Boolean)">
+            <summary>
+            Vote Group
+            </summary>
+        </member>
         <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.Nullable{ProyectoAPIGrupoA.Models.GameStatus},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Game Search
