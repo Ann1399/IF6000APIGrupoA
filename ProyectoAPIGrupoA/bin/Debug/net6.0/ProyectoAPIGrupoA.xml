@@ -4,7 +4,7 @@
         <name>ProyectoAPIGrupoA</name>
     </assembly>
     <members>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.Get(System.String,ProyectoIIRedesAPI.Models.gamePwd,System.String)">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.Get(System.String,System.String,System.String)">
             <summary>
             Get Game
             </summary>

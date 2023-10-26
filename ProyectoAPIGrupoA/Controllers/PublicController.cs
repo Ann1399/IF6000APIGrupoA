@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
-using ProyectoAPIGrupoA.Util;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Generic;
 using System.Text.Json;
-using System.Xml.Linq;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -36,7 +31,6 @@ namespace ProyectoAPIGrupoA.Controllers
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult Get(string? name, string? status, Int32 page, Int32 limit)
         {
-
             BaseResponse game = new BaseResponse("Games found",200);
             List<JObject> list = Util.Utility.getGames(name,status,page,limit);
             foreach (var g in list)
@@ -137,13 +131,17 @@ namespace ProyectoAPIGrupoA.Controllers
             //se agrega juego a la lista
             Util.Utility.gameList.Add(game1);
 
-            BaseResponse br = new BaseResponse("Game Created!", 201,game1);
+            BaseResponse br = new BaseResponse("Game Created", 201,game1);
 
 
                 string jsonString = JsonSerializer.Serialize(br);
 
                 JObject rss = JObject.Parse(jsonString); 
                 JObject customers = (JObject)rss.SelectToken("Data");
+                customers.Remove("UpdatedAt");
+                customers.Remove("CreatedAt");
+                customers.Remove("Pdw");
+                customers.Remove("Owner");
 
                 //copiar RoundId
                 JObject x1 = (JObject)customers.SelectToken("CurrentRound");
