@@ -97,7 +97,7 @@ namespace ProyectoAPIGrupoA.Controllers
         [Tags("Players")]
         [Route("/api/games/{gameId}/")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public ActionResult joinGame([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody]gamePlayerName playerb)
+        public ActionResult joinGame([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] gamePlayerName playerb)
         {
 
             if (!ModelState.IsValid)
@@ -118,7 +118,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-      
+
             game g = Util.Utility.getGameId(gameId);
             g.Players.Add(new gamePlayerName(player));
             BaseResponse br = new BaseResponse("Joinned successfuly", 201, g);
@@ -166,23 +166,23 @@ namespace ProyectoAPIGrupoA.Controllers
             {
                 return StatusCode(406, new errorMessage("missing game owner or password parameters", 406));
             }
-            if ( Util.Utility.getGameId(gameId) == null)
+            if (Util.Utility.getGameId(gameId) == null)
             {
 
                 Response.Headers.Add("status", "404 Not Found");
                 Response.Headers.Add("x-msg", "Game does not exists");
-                
+
                 return StatusCode(404);
             }
-            if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId),player)==false)
+            if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
-                
+
                 Response.Headers.Add("status", "409 Conflict");
                 Response.Headers.Add("x-msg", "Player is already part of the game");
 
                 return StatusCode(409);
             }
-            if (Util.Utility.verifyPlayersCount(Util.Utility.getGameId(gameId))==false)
+            if (Util.Utility.verifyPlayersCount(Util.Utility.getGameId(gameId)) == false)
             {
                 Response.Headers.Add("status", "428 Precondition Required ");
                 Response.Headers.Add("x-msg", "Need 5 players to start.");
@@ -216,7 +216,7 @@ namespace ProyectoAPIGrupoA.Controllers
             g.CurrentRound = r.Id;
             g.Status = GameStatus.rounds;
             Response.Headers.Add("status", "200 Game Started");
-            return StatusCode(200,"");
+            return StatusCode(200, "");
         }
         ///<summary>
         ///Get Rounds
@@ -244,6 +244,18 @@ namespace ProyectoAPIGrupoA.Controllers
             return StatusCode(200, r);
         }
 
-    }
 
+        ///<summary>
+        ///Propose a group
+        ///</summary>
+        [HttpPatch]
+        [Tags("Players")]
+        [Route("/api/games/{gameId}/rounds/{roundId}")]
+        public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] string[] group)
+        {
+            return Ok();
+        }
+    }
 }
+
+
