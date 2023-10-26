@@ -303,26 +303,53 @@ namespace ProyectoAPIGrupoA.Util
             return game;
         }
 
+        public static round getRoundId(string gameId, string roundId)
+        {
+            round round = null;
+            for (int i = 0; i < roundList.Count(); i++)
+            {
+                if (roundList[i].GameId.Id == gameId&& roundList[i].Id.Id==roundId)
+                {
+                    round = roundList[i];
+                }
+            }
+            return round;
+        }
+
+
         public static List<JObject> getGames(string? name, string? status, Int32? page, Int32? limit)
         {
             List<JObject> gameL = new List<JObject>();
             var converter = new StringEnumConverter();
-
-            for (int i = 0; i < limit; i++)
+            int length = 0;
+            if(limit == null)
+            {
+                length = 50;
+            }
+            for (int i = 0; i < length; i++)
             {
                 if (i < gameList.Count())
                 {
-                    if (status != null && gameList[i].Status.ToString() == status)
+                    if (name == null && status == "" && page == null && limit == null)
                     {
-                        string json = JsonConvert.SerializeObject(gameList[i]);
+                        string json = JsonConvert.SerializeObject(gameList[i], converter);
                         JObject jsonObject = JObject.Parse(json);
                         gameL.Add(jsonObject);
                     }
-                    else if (status == null && gameList[i].Status.ToString() == "lobby")
+                    else
                     {
-                        string json = JsonConvert.SerializeObject(gameList[i],converter);
-                        JObject jsonObject = JObject.Parse(json);
-                        gameL.Add(jsonObject);
+                        if (status != null && gameList[i].Status.ToString() == status)
+                        {
+                            string json = JsonConvert.SerializeObject(gameList[i]);
+                            JObject jsonObject = JObject.Parse(json);
+                            gameL.Add(jsonObject);
+                        }
+                        else if (status == null && gameList[i].Status.ToString() == "lobby")
+                        {
+                            string json = JsonConvert.SerializeObject(gameList[i], converter);
+                            JObject jsonObject = JObject.Parse(json);
+                            gameL.Add(jsonObject);
+                        }
                     }
                 }
                 else { break; }

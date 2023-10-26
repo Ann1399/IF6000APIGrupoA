@@ -25,7 +25,17 @@
             Game Start
             </summary>
         </member>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.getRound(System.String,System.String,System.String)">
+            <summary>
+            Get Rounds
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.showRound(System.String,System.String,System.String,System.String)">
+            <summary>
+            Show Round
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.Nullable{ProyectoAPIGrupoA.Models.GameStatus},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Game Search
             </summary>

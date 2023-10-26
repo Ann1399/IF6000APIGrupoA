@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
 using ProyectoIIRedesAPI.Models;
@@ -52,7 +53,7 @@ namespace ProyectoAPIGrupoA.Controllers
             BaseResponse br = new BaseResponse("Game Found", 200, gameFound);
 
 
-            string jsonString = JsonSerializer.Serialize(br);
+            string jsonString = JsonConvert.SerializeObject(br);
 
             JObject rss = JObject.Parse(jsonString);
             JObject customers = (JObject)rss.SelectToken("Data");
@@ -123,7 +124,7 @@ namespace ProyectoAPIGrupoA.Controllers
             BaseResponse br = new BaseResponse("Joinned successfuly", 201, g);
 
 
-            string jsonString = JsonSerializer.Serialize(br);
+            string jsonString = JsonConvert.SerializeObject(br);
 
             JObject rss = JObject.Parse(jsonString);
             JObject customers = (JObject)rss.SelectToken("Data");
@@ -181,14 +182,14 @@ namespace ProyectoAPIGrupoA.Controllers
 
                 return StatusCode(409);
             }
-            if (Util.Utility.verifyPlayersCount(Util.Utility.getGameId(gameId)))
+            if (Util.Utility.verifyPlayersCount(Util.Utility.getGameId(gameId))==false)
             {
                 Response.Headers.Add("status", "428 Precondition Required ");
                 Response.Headers.Add("x-msg", "Need 5 players to start.");
 
                 return StatusCode(428);
             }
-            if (Util.Utility.getGameId(gameId).Status.ToString() != "lobby ")
+            if (Util.Utility.getGameId(gameId).Status.ToString() != "lobby")
             {
                 Response.Headers.Add("status", "409 Game already started");
                 Response.Headers.Add("x-msg", "Game already started.");
@@ -197,17 +198,52 @@ namespace ProyectoAPIGrupoA.Controllers
             }
 
             game g = Util.Utility.getGameId(gameId);
-
+            round r = new round(g.Id);
             int enemiesC = Util.Utility.getpsychoscountAtStart(g);
-
-            for(int i=0; i < g.Players.Count(); i++)
+            int count = 0;
+            while (count < enemiesC)
             {
+                string enemy = Util.Utility.getRandomLeader(g);
+                bool enemyExists = g.Enemies.Any(e => e.PlayerName == enemy);
 
+                if (!enemyExists)
+                {
+                    g.Enemies.Add(new gamePlayerName(enemy));
+                    count++;
+                }
             }
-
+            r.GameId = g.Id;
+            g.CurrentRound = r.Id;
+            g.Status = GameStatus.rounds;
+            Response.Headers.Add("status", "200 Game Started");
+            return StatusCode(200,"");
+        }
+        ///<summary>
+        ///Get Rounds
+        ///</summary>
+        [HttpGet]
+        [Tags("Players")]
+        [Route("/api/games/{gameId}/rounds")]
+        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
+        public ActionResult getRound([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
+        {
 
             return StatusCode(200, "");
         }
+
+        ///<summary>
+        ///Show Round
+        ///</summary>
+        [HttpGet]
+        [Tags("Players")]
+        [Route("/api/games/{gameId}/rounds/{roundId}")]
+        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
+        public ActionResult showRound([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player)
+        {
+            round r = Util.Utility.getRoundId(gameId, roundId);
+            return StatusCode(200, r);
         }
+
+    }
 
 }

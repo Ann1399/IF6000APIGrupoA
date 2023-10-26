@@ -31,10 +31,10 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpGet]
         [Tags("Public","Players")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public ActionResult Get(string? name, string? status, Int32 page, Int32 limit)
+        public ActionResult Get(string? name, GameStatus? status, Int32? page, Int32? limit)
         {
             BaseResponse game = new BaseResponse("Games found",200);
-            List<JObject> list = Util.Utility.getGames(name,status,page,limit);
+            List<JObject> list = Util.Utility.getGames(name,status.ToString(),page,limit);
             foreach (var g in list)
             {
 
