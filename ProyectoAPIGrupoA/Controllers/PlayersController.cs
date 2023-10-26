@@ -33,51 +33,62 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpGet]
         [Tags("Players")]
         [Route("/api/games/{gameId}/")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public game Get([Required] string gameId, gamePwd? password, [Required] string player)
+        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(GameGet))]
+        public ActionResult Get([Required] string gameId, string password, [Required] string player)
         {
 
-            BaseResponse game = new BaseResponse("Games found", 200);
+            //BaseResponse game = new BaseResponse("Games found", 200);
             game gameFound = Util.Utility.getGameId(gameId);
-            //foreach (var g in list)
-            //{
 
-            //    //copiar RoundId
-            //    JObject x1 = (JObject)g.SelectToken("CurrentRound");
-            //    string idValue1 = (string)g["CurrentRound"]["Id"];
-            //    x1.Remove("Id");
-            //    g["CurrentRound"] = idValue1;
+            if ((password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password) && Util.Utility.getGameId(gameId).Password == true)
+            {
+                BaseResponse br2 = new BaseResponse("Invalid password", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
 
-            //    //copiar Id
-            //    JObject x2 = (JObject)g.SelectToken("Id");
-            //    string idValue2 = (string)g["Id"]["Id"];
-            //    x2.Remove("Id");
-            //    g["Id"] = idValue2;
+            gameFound.Players.Add(new gamePlayerName(player));
+            BaseResponse br = new BaseResponse("Game Found", 200, gameFound);
 
-            //    //copiar Nombre
-            //    JObject x3 = (JObject)g.SelectToken("Name");
-            //    string idValue3 = (string)g["Name"]["Name"];
-            //    x3.Remove("Name");
-            //    g["Name"] = idValue3;
 
-            //    //copiar Jugadores
-            //    Util.Utility.ConvertirObjetoPlayersAArray(g);
-            //    Util.Utility.ConvertirPropiedadesAMinuscula(g);
-            //}
-            //string jsonString = JsonSerializer.Serialize(game);
+            string jsonString = JsonSerializer.Serialize(br);
 
-            //JObject rss = JObject.Parse(jsonString);
-            //JArray dataArray = new JArray();
-            //foreach (var g in list)
-            //{
-            //    dataArray.Add(g);
-            //}
-            //rss["Data"] = dataArray;
-            //Util.Utility.ConvertirPropiedadesAMinuscula(rss);
-            //return StatusCode(406, rss); ;
-            return gameFound;
+            JObject rss = JObject.Parse(jsonString);
+            JObject customers = (JObject)rss.SelectToken("Data");
+
+            customers.Remove("CreatedAt");
+            customers.Remove("Owner");
+            customers.Remove("UpdatedAt");
+            customers.Remove("pdw");
+
+            //copiar RoundId
+            JObject x1 = (JObject)customers.SelectToken("CurrentRound");
+            string idValue1 = (string)customers["CurrentRound"]["Id"];
+            x1.Remove("Id");
+            customers["CurrentRound"] = idValue1;
+
+            //copiar Id
+            JObject x2 = (JObject)customers.SelectToken("Id");
+            string idValue2 = (string)customers["Id"]["Id"];
+            x2.Remove("Id");
+            customers["Id"] = idValue2;
+
+            //copiar Nombre
+            JObject x3 = (JObject)customers.SelectToken("Name");
+            string idValue3 = (string)customers["Name"]["Name"];
+            x3.Remove("Name");
+            customers["Name"] = idValue3;
+
+            //copiar Jugadores
+            Util.Utility.ConvertirObjetoPlayersAArray(rss);
+            Util.Utility.ConvertirPropiedadesAMinuscula(rss);
+
+            return StatusCode(201, rss);
 
         }
+
+
         ///<summary>
         ///Join Game
         ///</summary>
