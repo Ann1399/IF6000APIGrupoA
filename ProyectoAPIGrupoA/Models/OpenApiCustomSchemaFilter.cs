@@ -12,7 +12,7 @@ public class OpenApiCustomSchemaFilter : ISchemaFilter
             schema.Properties = new Dictionary<string, OpenApiSchema>
             {
                 {
-                    "-",
+                    "player",
                     new OpenApiSchema
                     {
                         Type = "string",
@@ -23,5 +23,6 @@ public class OpenApiCustomSchemaFilter : ISchemaFilter
                 }
             };
         }
+        //context.SchemaRepository.Schemas.Remove("VoteModel");
     }
 }

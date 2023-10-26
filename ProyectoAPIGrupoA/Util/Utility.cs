@@ -544,46 +544,39 @@ namespace ProyectoAPIGrupoA.Util
         //            return verify;
         //        }
 
-        //        public static bool verifyGroupList(Game game, string name)//Verifica si el jugador pertenece al grupo enviado
-        //        {
-        //            bool verify = false;
+        public static bool VerifyGroupList(round r, string name)
+        {
+            bool verify = r.Group.Any(player => player.PlayerName == name);
+            return verify;
+        }
 
-        //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
-        //            {
-        //                if (game.Rounds[getRounds(game)].Group[i].Name.Equals(name))
-        //                {
-        //                    verify = true;
-        //                }
-
-
-
-        //            }
-        //            return verify;
-        //        }
-        //        public static bool psychosWin(Game game)//Verifica si el jugador pertenece al grupo enviado
-        //        {
-        //            bool verify = false;
-        //            int countPsycho = 0;
-        //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
-        //            {
-        //                if (game.PsychoWin[i].Equals(true))
-        //                {
-        //                    countPsycho++;
-        //                }
+    //            }
+    //            return verify;
+    //        }
+    //        public static bool psychosWin(Game game)//Verifica si el jugador pertenece al grupo enviado
+    //        {
+    //            bool verify = false;
+    //            int countPsycho = 0;
+    //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
+    //            {
+    //                if (game.PsychoWin[i].Equals(true))
+    //                {
+    //                    countPsycho++;
+    //                }
 
 
 
-        //            }
-        //            if (countPsycho==3)
-        //            {
-        //                verify=true;
-        //            }
+    //            }
+    //            if (countPsycho==3)
+    //            {
+    //                verify=true;
+    //            }
 
 
-        //            return verify;
-        //        }
+    //            return verify;
+    //        }
 
-        public static int getpsychoscountAtStart(game game)
+    public static int getpsychoscountAtStart(game game)
         {
             if (game.Players.Count() == 5 || game.Players.Count() == 6)
             {

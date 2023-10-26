@@ -243,25 +243,65 @@ namespace ProyectoAPIGrupoA.Controllers
             round r = Util.Utility.getRoundId(gameId, roundId);
             return StatusCode(200, r);
         }
+        
         ///<summary>
-        ///Vote Group
-        ///</summary>
+        ///Propose a group
+        ///</summary>    
+        [HttpPatch]
+            [Tags("Players")]
+            [Route("/api/games/{gameId}/rounds/{roundId}")]
+            public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] string[] group)
+            {
+                return Ok();
+            }
+        /// <summary>
+        /// Vota en un grupo.
+        /// </summary>
+        /// <param name="gameId">ID del juego.</param>
+        /// <param name="roundId">ID de la ronda.</param>
+        /// <param name="password">Contraseña (si es necesaria).</param>
+        /// <param name="player">Nombre del jugador.</param>
+        /// <param name="vote">Objeto JSON que representa el voto.
+        /// <returns>Resultado de la votación.</returns>
         [HttpPost]
         [Tags("Players")]
         [Route("/api/games/{gameId}/rounds/{roundId}")]
-        public ActionResult voteGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [Required][FromBody] bool vote)
+        public ActionResult voteGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Vote vote)
         {
 
+            game g = Util.Utility.getGameId(gameId);
+            round r = Util.Utility.getRoundId(gameId, roundId);
 
-        ///<summary>
-        ///Propose a group
-        ///</summary>
-        [HttpPatch]
-        [Tags("Players")]
-        [Route("/api/games/{gameId}/rounds/{roundId}")]
-        public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] string[] group)
+            if (Util.Utility.VerifyGroupList(r, player))
+            {
+                r.Votes.RoundVotes.Add(vote.vote);
+                if(r.Votes.RoundVotes.Count == r.Group.Count()) {
+                    int trueCount = r.Votes.RoundVotes.Count(vote => vote);
+                    int falseCount = r.Votes.RoundVotes.Count(vote => !vote);
+                    if (trueCount > falseCount)
+                    {
+                        r.Result = roundResult.citizen;
+                    }
+                    else
+                    {
+                        r.Result = roundResult.enenmies;
+                    }
+                    r.Status = roundStatus.ended;
+                    round r2 = new round(g.Id);                  
+                    g.CurrentRound = r2.Id;
+
+                }
+            }
+
+            return StatusCode(200, "hecho");
+        }
+
+
+
+        public class Vote
         {
-            return Ok();
+            /// <example>false</example>
+            public bool vote { get; set; }
         }
     }
 }
