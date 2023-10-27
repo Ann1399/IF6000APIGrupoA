@@ -2,12 +2,14 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using ProyectoAPIGrupoA.Models;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+ options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddControllers().Services.AddControllers()
                     .AddNewtonsoftJson(options =>
                     {

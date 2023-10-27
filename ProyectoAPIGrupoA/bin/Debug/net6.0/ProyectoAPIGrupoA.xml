@@ -40,8 +40,20 @@
             Propose a group
             </summary>    
         </member>
-        <!-- Badly formed XML comment ignored for member "M:ProyectoAPIGrupoA.Controllers.PlayersController.voteGroup(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Controllers.PlayersController.Vote)" -->
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.voteGroup(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Controllers.PlayersController.Vote)">
+            <summary>
+            Vote Group
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.submitAction(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Controllers.PlayersController.Action)">
+            <summary>
+            Submit action as member of the Round group
+            </summary>
+        </member>
         <member name="P:ProyectoAPIGrupoA.Controllers.PlayersController.Vote.vote">
+            <example>false</example>
+        </member>
+        <member name="P:ProyectoAPIGrupoA.Controllers.PlayersController.Action.action">
             <example>false</example>
         </member>
         <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.Nullable{ProyectoAPIGrupoA.Models.GameStatus},System.Nullable{System.Int32},System.Nullable{System.Int32})">

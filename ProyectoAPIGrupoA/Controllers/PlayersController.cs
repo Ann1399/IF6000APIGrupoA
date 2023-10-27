@@ -255,14 +255,8 @@ namespace ProyectoAPIGrupoA.Controllers
                 return Ok();
             }
         /// <summary>
-        /// Vota en un grupo.
+        /// Vote Group
         /// </summary>
-        /// <param name="gameId">ID del juego.</param>
-        /// <param name="roundId">ID de la ronda.</param>
-        /// <param name="password">Contraseña (si es necesaria).</param>
-        /// <param name="player">Nombre del jugador.</param>
-        /// <param name="vote">Objeto JSON que representa el voto.
-        /// <returns>Resultado de la votación.</returns>
         [HttpPost]
         [Tags("Players")]
         [Route("/api/games/{gameId}/rounds/{roundId}")]
@@ -296,12 +290,27 @@ namespace ProyectoAPIGrupoA.Controllers
             return StatusCode(200, "hecho");
         }
 
+        ///<summary>
+        ///Submit action as member of the Round group
+        ///</summary>
+        [HttpPut]
+        [Tags("Players")]
+        [Route("/api/games/{gameId}/rounds/{roundId}")]
+        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
+        public ActionResult submitAction([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Action action)
+        {
+            return StatusCode(200, "hecho");
 
-
+        }
         public class Vote
         {
             /// <example>false</example>
             public bool vote { get; set; }
+        }
+        public class Action
+        {
+            /// <example>false</example>
+            public bool action { get; set; }
         }
     }
 }

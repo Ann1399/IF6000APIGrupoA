@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+U9ibQqvG7Ffju/zSjcGJ+vMM5G3/clGPJ7voh00OOF+vKmuYC5Q5OAmA65FaVnqDqNkoTp0vNDT5YzC4IZ1eg==",
+  "dgSpecHash": "5czJr5M33LrGO/62DNT3SN1OsEtU2S2MIeqR8LmbKtlIlWc9idyCFfqhq829W3Sa0J6evBqkNCsPb2kmwCKeAw==",
   "success": true,
   "projectFilePath": "C:\\Users\\ExtremeTech\\Desktop\\RedesII\\IF6000APIGrupoA\\ProyectoAPIGrupoA\\ProyectoAPIGrupoA.csproj",
   "expectedPackageFiles": [
@@ -21,7 +21,8 @@
     "C:\\Users\\ExtremeTech\\.nuget\\packages\\swashbuckle.aspnetcore.annotations\\6.4.0\\swashbuckle.aspnetcore.annotations.6.4.0.nupkg.sha512",
     "C:\\Users\\ExtremeTech\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\ExtremeTech\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
-    "C:\\Users\\ExtremeTech\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512"
+    "C:\\Users\\ExtremeTech\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.2.3\\swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512",
+    "C:\\Users\\ExtremeTech\\.nuget\\packages\\unchase.swashbuckle.aspnetcore.extensions\\2.7.1\\unchase.swashbuckle.aspnetcore.extensions.2.7.1.nupkg.sha512"
   ],
   "logs": [
     {

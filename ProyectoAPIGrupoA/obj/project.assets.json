@@ -270,6 +270,22 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Unchase.Swashbuckle.AspNetCore.Extensions/2.7.1": {
+        "type": "package",
+        "dependencies": {
+          "Swashbuckle.AspNetCore.SwaggerGen": "6.4.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Unchase.Swashbuckle.AspNetCore.Extensions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Unchase.Swashbuckle.AspNetCore.Extensions.dll": {
+            "related": ".xml"
+          }
+        }
       }
     }
   },
@@ -662,6 +678,19 @@
         "swashbuckle.aspnetcore.swaggerui.6.2.3.nupkg.sha512",
         "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
+    },
+    "Unchase.Swashbuckle.AspNetCore.Extensions/2.7.1": {
+      "sha512": "M2pp9GzQxJ9X6U93TPcC+HL4XuZrRg2BIrB9Pt6WJ1LfrdZ9KMwJNBWrGWuJ/XmrS8WVx4IUT07xkVC1kKvxgA==",
+      "type": "package",
+      "path": "unchase.swashbuckle.aspnetcore.extensions/2.7.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Unchase.Swashbuckle.AspNetCore.Extensions.dll",
+        "lib/netstandard2.0/Unchase.Swashbuckle.AspNetCore.Extensions.xml",
+        "unchase.swashbuckle.aspnetcore.extensions.2.7.1.nupkg.sha512",
+        "unchase.swashbuckle.aspnetcore.extensions.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -671,7 +700,8 @@
       "Newtonsoft.Json >= 13.0.1",
       "Swagger-Net >= 8.4.19.1",
       "Swashbuckle.AspNetCore >= 6.2.3",
-      "Swashbuckle.AspNetCore.Annotations >= 6.4.0"
+      "Swashbuckle.AspNetCore.Annotations >= 6.4.0",
+      "Unchase.Swashbuckle.AspNetCore.Extensions >= 2.7.1"
     ]
   },
   "packageFolders": {
@@ -736,6 +766,10 @@
           "Swashbuckle.AspNetCore.Annotations": {
             "target": "Package",
             "version": "[6.4.0, )"
+          },
+          "Unchase.Swashbuckle.AspNetCore.Extensions": {
+            "target": "Package",
+            "version": "[2.7.1, )"
           }
         },
         "imports": [

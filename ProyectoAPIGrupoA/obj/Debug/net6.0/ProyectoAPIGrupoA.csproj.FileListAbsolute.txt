@@ -132,3 +132,4 @@ C:\Users\Usuario\Source\Repos\IF6000APIGrupoA\ProyectoAPIGrupoA\bin\Debug\net6.0
 C:\Users\Usuario\Source\Repos\IF6000APIGrupoA\ProyectoAPIGrupoA\bin\Debug\net6.0\System.Web.Http.WebHost.dll
 C:\Users\Usuario\Source\Repos\IF6000APIGrupoA\ProyectoAPIGrupoA\bin\Debug\net6.0\NSwag.Annotations.dll
 C:\Users\Usuario\Source\Repos\IF6000APIGrupoA\ProyectoAPIGrupoA\bin\Debug\net6.0\Swagger.Net.dll
+C:\Users\ExtremeTech\Desktop\RedesII\IF6000APIGrupoA\ProyectoAPIGrupoA\bin\Debug\net6.0\Unchase.Swashbuckle.AspNetCore.Extensions.dll
