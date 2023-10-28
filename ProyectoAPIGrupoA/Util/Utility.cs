@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace ProyectoAPIGrupoA.Util
 {
@@ -256,24 +257,37 @@ namespace ProyectoAPIGrupoA.Util
         //            return verify;
         //        }
 
-        //        public static int getRounds(Game game)
+        public static List<JObject> getRounds(game game)
+        {
+            List<JObject> roundL = new List<JObject>();
+            var converter = new StringEnumConverter();
+
+            for (int i = 0; i < roundList.Count(); i++)
+            {
+                if (roundList[i].Id.Id == game.Id.Id)
+                {
+                    string json = JsonConvert.SerializeObject(gameList[i], converter);
+                    JObject jsonObject = JObject.Parse(json);
+                    roundL.Add(jsonObject);
+                }          
+            }
+
+            return roundL;
+        }
+
+        //public static bool verifyPlayersExist(Game game, GroupProposal group)
+        //{
+        //    bool gameExist = true;
+        //    for (int j = 0; j < group.Group.Count(); j++)
+        //    {
+        //        if (!game.Players.Contains(group.Group[j]))
         //        {
-        //            return game.Rounds.Count()-1;
+        //            gameExist = false;
         //        }
 
-        //        public static bool verifyPlayersExist(Game game, GroupProposal group)
-        //        {
-        //            bool gameExist = true;
-        //                for (int j = 0; j < group.Group.Count(); j++)
-        //                {
-        //                    if (!game.Players.Contains(group.Group[j]))
-        //                    {
-        //                        gameExist = false;
-        //                    }
-
-        //                }
-        //            return gameExist;
-        //        }
+        //    }
+        //    return gameExist;
+        //}
 
         //        public static bool password(string value)
         //        {

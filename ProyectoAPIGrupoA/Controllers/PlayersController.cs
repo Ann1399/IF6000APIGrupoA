@@ -5,10 +5,12 @@ using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
 using ProyectoIIRedesAPI.Models;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Xml.Linq;
 
 
 
@@ -226,10 +228,11 @@ namespace ProyectoAPIGrupoA.Controllers
         [Tags("Players")]
         [Route("/api/games/{gameId}/rounds")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public ActionResult getRound([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
+        public ActionResult getRounds([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
         {
-
-            return StatusCode(200, "");
+            game g = Util.Utility.getGameId(gameId);
+            List<JObject> list = Util.Utility.getRounds(g);
+            return StatusCode(200, list);
         }
 
         ///<summary>
@@ -253,7 +256,8 @@ namespace ProyectoAPIGrupoA.Controllers
             [Route("/api/games/{gameId}/rounds/{roundId}")]
             public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] string[] group)
             {
-                return Ok();
+            
+            return StatusCode(200,"");
             }
         /// <summary>
         /// Vote Group
