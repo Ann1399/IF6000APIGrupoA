@@ -82,7 +82,7 @@ namespace ProyectoAPIGrupoA.Controllers
             customers["Name"] = idValue3;
 
             //copiar Jugadores
-            Util.Utility.ConvertirObjetoPlayersAArray(rss);
+            Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
             Util.Utility.ConvertirPropiedadesAMinuscula(rss);
 
             return StatusCode(201, rss);
@@ -148,7 +148,7 @@ namespace ProyectoAPIGrupoA.Controllers
             customers["Name"] = idValue3;
 
             //copiar Jugadores
-            Util.Utility.ConvertirObjetoPlayersAArray(rss);
+            Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
             Util.Utility.ConvertirPropiedadesAMinuscula(rss);
 
             return StatusCode(201, rss);
@@ -279,7 +279,7 @@ namespace ProyectoAPIGrupoA.Controllers
 
                     }else if(trueCount<falseCount && r.Phase == roundPhase.vote3)
                     {
-                        r.Result = roundResult.enenmies;
+                        r.Result = roundResult.enemies;
                         round r2 = new round(g.Id);
                         g.CurrentRound = r2.Id;
                     }
@@ -302,7 +302,7 @@ namespace ProyectoAPIGrupoA.Controllers
             customers["Id"] = idValue2;
 
             //copiar Jugadores
-            Util.Utility.ConvertirObjetoPlayersAArray(rss);
+            Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
             Util.Utility.ConvertirPropiedadesAMinuscula(rss);
             return StatusCode(200, br);
         }
@@ -317,7 +317,29 @@ namespace ProyectoAPIGrupoA.Controllers
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult submitAction([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Action action)
         {
-            return StatusCode(200, "hecho");
+
+            game g = Util.Utility.getGameId(gameId);
+            round r = Util.Utility.getRoundId(gameId, roundId);
+            r.Actions.Add(action.action);
+            if(r.Actions.Count == r.Group.Count())
+            {
+                if(r.Actions.Any(x => x == false))
+                {
+                    r.Result = roundResult.enemies;
+                }
+                else
+                {
+                    r.Result = roundResult.citizen;
+                }
+                r.Status = roundStatus.ended;
+                round r2 = new round(g.Id);
+                g.CurrentRound = r2.Id;
+
+                BaseResponse br = new BaseResponse("round ended",200,r2);
+                return StatusCode(200, r2);
+            }
+            BaseResponse br2 = new BaseResponse("round ended", 200, r);
+            return StatusCode(200, r);
 
         }
         public class Vote

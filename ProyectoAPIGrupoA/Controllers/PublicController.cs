@@ -59,7 +59,8 @@ namespace ProyectoAPIGrupoA.Controllers
                 g["Name"] = idValue3;
 
                 //copiar Jugadores
-                Util.Utility.ConvertirObjetoPlayersAArray(g);
+                Util.Utility.ConvertirObjetoPlayersAArray(g,"players");
+                Util.Utility.ConvertirObjetoPlayersAArray(g, "enemies");
                 //Util.Utility.ConvertirPropiedadesAMinuscula(g);
             }
             string jsonString = JsonConvert.SerializeObject(game);
@@ -165,8 +166,13 @@ namespace ProyectoAPIGrupoA.Controllers
                 x3.Remove("Name");
                 customers["Name"] = idValue3;
 
+
+                //copiar grupo, si existe
+                //JObject x4 = (JObject)customers.SelectToken("Name");
+
+
                 //copiar Jugadores
-                Util.Utility.ConvertirObjetoPlayersAArray(rss);
+                Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
                 Util.Utility.ConvertirPropiedadesAMinuscula(rss);
 
                 return StatusCode(201, rss);

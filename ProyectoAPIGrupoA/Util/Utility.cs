@@ -52,10 +52,10 @@ namespace ProyectoAPIGrupoA.Util
             return jsonObject;
         }
 
-        public static JObject ConvertirObjetoPlayersAArray(JObject jsonObject)
+        public static JObject ConvertirObjetoPlayersAArray(JObject jsonObject, string property)
         {
             JProperty playersProperty = jsonObject.DescendantsAndSelf().OfType<JProperty>()
-             .FirstOrDefault(p => p.Name.Equals("Players", StringComparison.OrdinalIgnoreCase));
+             .FirstOrDefault(p => p.Name.Equals(property, StringComparison.OrdinalIgnoreCase));
 
             if (playersProperty != null)
             {
