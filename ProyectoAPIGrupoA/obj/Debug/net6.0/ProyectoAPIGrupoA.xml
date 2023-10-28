@@ -61,10 +61,10 @@
             Game Search
             </summary>
             <remarks>By passing in the appropriate options, you can search for games in the system</remarks>
-             <param name="name">game property to be used as filter</param>
-             <param name="status">property value to match with. When empty should return an empty array</param>
-             <param name="page">game property to be used as filter</param>
-             <param name="limit">game property to be used as filter</param>
+             <param name="name">filter games where query string is part of the name</param>
+             <param name="status">filter games based on status</param>
+             <param name="page">number of records to skip for pagination</param>
+             <param name="limit">maximum number of records to return</param>
              <response code="200">returns all games</response>
              
         </member>
@@ -75,6 +75,11 @@
             <remarks>By passing in the appropriate options, you can create a game.Password is optional</remarks>
              <response code="200">Game Created</response>
             
+        </member>
+        <member name="F:ProyectoAPIGrupoA.Models.GameStatus.lobby">
+            <summary>
+            Possible values are 'lobby' (default), 'rounds', and 'ended'.
+            </summary>
         </member>
     </members>
 </doc>

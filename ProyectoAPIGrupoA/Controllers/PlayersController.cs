@@ -18,7 +18,7 @@ namespace ProyectoAPIGrupoA.Controllers
 {
     [Produces("application/json")]
     [Route("/api/games/")]
-
+    
     public class PlayersController : ControllerBase
     {
         ///<summary>
@@ -215,6 +215,7 @@ namespace ProyectoAPIGrupoA.Controllers
             r.GameId = g.Id;
             g.CurrentRound = r.Id;
             g.Status = GameStatus.rounds;
+            r.Group = g.Players;
             Response.Headers.Add("status", "200 Game Started");
             return StatusCode(200, "");
         }
@@ -269,25 +270,41 @@ namespace ProyectoAPIGrupoA.Controllers
             if (Util.Utility.VerifyGroupList(r, player))
             {
                 r.Votes.RoundVotes.Add(vote.vote);
-                if(r.Votes.RoundVotes.Count == r.Group.Count()) {
+                if(r.Votes.RoundVotes.Count() == g.Players.Count()) {
                     int trueCount = r.Votes.RoundVotes.Count(vote => vote);
                     int falseCount = r.Votes.RoundVotes.Count(vote => !vote);
                     if (trueCount > falseCount)
                     {
-                        r.Result = roundResult.citizen;
-                    }
-                    else
+                        r.Status = roundStatus.waiting_on_group;
+
+                    }else if(trueCount<falseCount && r.Phase == roundPhase.vote3)
                     {
                         r.Result = roundResult.enenmies;
+                        round r2 = new round(g.Id);
+                        g.CurrentRound = r2.Id;
                     }
-                    r.Status = roundStatus.ended;
-                    round r2 = new round(g.Id);                  
-                    g.CurrentRound = r2.Id;
+                    
 
                 }
             }
+            BaseResponse br = new BaseResponse("Game Found", 200, r);
 
-            return StatusCode(200, "hecho");
+
+            string jsonString = JsonConvert.SerializeObject(br);
+
+            JObject rss = JObject.Parse(jsonString);
+            JObject customers = (JObject)rss.SelectToken("Data");
+
+            //copiar Id
+            JObject x2 = (JObject)customers.SelectToken("Id");
+            string idValue2 = (string)customers["Id"]["Id"];
+            x2.Remove("Id");
+            customers["Id"] = idValue2;
+
+            //copiar Jugadores
+            Util.Utility.ConvertirObjetoPlayersAArray(rss);
+            Util.Utility.ConvertirPropiedadesAMinuscula(rss);
+            return StatusCode(200, br);
         }
 
         ///<summary>
@@ -295,6 +312,7 @@ namespace ProyectoAPIGrupoA.Controllers
         ///</summary>
         [HttpPut]
         [Tags("Players")]
+
         [Route("/api/games/{gameId}/rounds/{roundId}")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult submitAction([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Action action)
@@ -314,5 +332,3 @@ namespace ProyectoAPIGrupoA.Controllers
         }
     }
 }
-
-

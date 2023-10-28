@@ -24,8 +24,12 @@ namespace ProyectoAPIGrupoA.Util
             foreach (var property in jsonObject.Properties().ToList())
             {
                 string nuevaClave = char.ToLower(property.Name[0]) + property.Name.Substring(1);
-                property.AddAfterSelf(new JProperty(nuevaClave, property.Value));
-                property.Remove();
+                JProperty jp = new JProperty(nuevaClave, property.Value);
+                if (property.Name != jp.Name)
+                {
+                    property.AddAfterSelf(jp);
+                    property.Remove();
+                }
             }
 
             foreach (var property in jsonObject.Properties())
@@ -321,12 +325,13 @@ namespace ProyectoAPIGrupoA.Util
         {
             List<JObject> gameL = new List<JObject>();
             var converter = new StringEnumConverter();
-            int length = 0;
+            
             if(limit == null)
             {
-                length = 50;
+                limit = 50;
             }
-            for (int i = 0; i < length; i++)
+
+            for (int i = 0; i < limit; i++)
             {
                 if (i < gameList.Count())
                 {
@@ -338,13 +343,13 @@ namespace ProyectoAPIGrupoA.Util
                     }
                     else
                     {
-                        if (status != null && gameList[i].Status.ToString() == status)
+                        if ((status != null || status != "") && gameList[i].Status.ToString() == status)
                         {
                             string json = JsonConvert.SerializeObject(gameList[i]);
                             JObject jsonObject = JObject.Parse(json);
                             gameL.Add(jsonObject);
                         }
-                        else if (status == null && gameList[i].Status.ToString() == "lobby")
+                        else if ((status == null || status == "") && gameList[i].Status.ToString() == "lobby")
                         {
                             string json = JsonConvert.SerializeObject(gameList[i], converter);
                             JObject jsonObject = JObject.Parse(json);

@@ -13,9 +13,6 @@ namespace ProyectoAPIGrupoA.Models
         {
             this.playerName = playerName;
         }
-
-        [SwaggerSchemaExample("Thanos")]
-        [StringLength(20, MinimumLength = 3)]
         public string PlayerName { get => playerName; set => playerName = value; }
     }
 }

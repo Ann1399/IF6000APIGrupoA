@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
+using System.ComponentModel;
 using System.Text.Json;
 
 
@@ -21,17 +22,18 @@ namespace ProyectoAPIGrupoA.Controllers
         ///Game Search
         ///</summary>
         ///<remarks>By passing in the appropriate options, you can search for games in the system</remarks>
-        /// <param name="name">game property to be used as filter</param>
-        /// <param name="status">property value to match with. When empty should return an empty array</param>
-        /// <param name="page">game property to be used as filter</param>
-        /// <param name="limit">game property to be used as filter</param>
+        /// <param name="name">filter games where query string is part of the name</param>
+        /// <param name="status">filter games based on status</param>
+        /// <param name="page">number of records to skip for pagination</param>
+        /// <param name="limit">maximum number of records to return</param>
         /// <response code="200">returns all games</response>
         /// 
-        
+
         [HttpGet]
         [Tags("Public","Players")]
+
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public ActionResult Get(string? name, GameStatus? status, Int32? page, Int32? limit)
+        public ActionResult Get( string? name, GameStatus? status, [DefaultValue("0")] Int32? page, [DefaultValue("50")]Int32? limit)
         {
             BaseResponse game = new BaseResponse("Games found",200);
             List<JObject> list = Util.Utility.getGames(name,status.ToString(),page,limit);

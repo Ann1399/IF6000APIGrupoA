@@ -20,7 +20,7 @@ namespace ProyectoAPIGrupoA.Models
         private string updatedAt { get; set; }
         private List<gamePlayerName> players;
         private List<gamePlayerName> enemies;
-        [DefaultValue("lobby")]
+        [DefaultValue(GameStatus.lobby)]
         [JsonConverter(typeof(StringEnumConverter))]
         private GameStatus status;
         private roundId currentRound;
