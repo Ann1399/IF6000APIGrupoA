@@ -12,6 +12,7 @@ namespace ProyectoAPIGrupoA.Models
         private roundResult result;
         private roundPhase phase;
         private List<gamePlayerName> group;
+        [IgnoreDataMember]
         private gameId gameId;
         private roundVote votes;
         [IgnoreDataMember]
@@ -37,6 +38,7 @@ namespace ProyectoAPIGrupoA.Models
         public List<gamePlayerName> Group { get => group; set => group = value; }
 
         public roundVote Votes { get => votes; set => votes = value; }
+        [IgnoreDataMember]
         public gameId GameId { get => gameId; set => gameId = value; }
         [IgnoreDataMember]
         public List<bool> Actions { get => actions; set => actions = value; }

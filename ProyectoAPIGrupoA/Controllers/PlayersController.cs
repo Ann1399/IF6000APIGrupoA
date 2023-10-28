@@ -11,6 +11,7 @@ using System.Numerics;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Xml.Linq;
+using Action = ProyectoAPIGrupoA.Models.Action;
 
 
 
@@ -131,23 +132,7 @@ namespace ProyectoAPIGrupoA.Controllers
             JObject rss = JObject.Parse(jsonString);
             JObject customers = (JObject)rss.SelectToken("Data");
 
-            //copiar RoundId
-            JObject x1 = (JObject)customers.SelectToken("CurrentRound");
-            string idValue1 = (string)customers["CurrentRound"]["Id"];
-            x1.Remove("Id");
-            customers["CurrentRound"] = idValue1;
-
-            //copiar Id
-            JObject x2 = (JObject)customers.SelectToken("Id");
-            string idValue2 = (string)customers["Id"]["Id"];
-            x2.Remove("Id");
-            customers["Id"] = idValue2;
-
-            //copiar Nombre
-            JObject x3 = (JObject)customers.SelectToken("Name");
-            string idValue3 = (string)customers["Name"]["Name"];
-            x3.Remove("Name");
-            customers["Name"] = idValue3;
+            Util.Utility.cleanGame(customers);
 
             //copiar Jugadores
             Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
@@ -215,9 +200,19 @@ namespace ProyectoAPIGrupoA.Controllers
                 }
             }
             r.GameId = g.Id;
+            ///////////////pruebas---eliminar
+            //round r2 = new round(g.Id);
+            //round r3 = new round(g.Id);
+            //Util.Utility.roundList.Add(r2);
+            //Util.Utility.roundList.Add(r3);
+            //r.Votes.RoundVotes.Add(true);
+            //r.Votes.RoundVotes.Add(false);
+            //r.Votes.RoundVotes.Add(false);
+            ///////////////
             g.CurrentRound = r.Id;
             g.Status = GameStatus.rounds;
             r.Group = g.Players;
+            Util.Utility.roundList.Add(r);
             Response.Headers.Add("status", "200 Game Started");
             return StatusCode(200, "");
         }
@@ -230,9 +225,21 @@ namespace ProyectoAPIGrupoA.Controllers
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult getRounds([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
         {
+            
             game g = Util.Utility.getGameId(gameId);
             List<JObject> list = Util.Utility.getRounds(g);
-            return StatusCode(200, list);
+            BaseResponse br = new BaseResponse("liso", 200, list);
+
+            foreach (var l in list)
+            {
+                Util.Utility.cleanRound(l);
+                Util.Utility.ConvertirObjetoPlayersAArray(l, "Group");
+            }
+            string jsonString = JsonConvert.SerializeObject(br);
+
+            JObject rss = JObject.Parse(jsonString);
+            Util.Utility.ConvertirPropiedadesAMinuscula(rss);
+            return StatusCode(200, rss);
         }
 
         ///<summary>
@@ -345,16 +352,6 @@ namespace ProyectoAPIGrupoA.Controllers
             BaseResponse br2 = new BaseResponse("round ended", 200, r);
             return StatusCode(200, r);
 
-        }
-        public class Vote
-        {
-            /// <example>false</example>
-            public bool vote { get; set; }
-        }
-        public class Action
-        {
-            /// <example>false</example>
-            public bool action { get; set; }
         }
     }
 }

@@ -35,35 +35,17 @@ namespace ProyectoAPIGrupoA.Controllers
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult Get( string? name, GameStatus? status, [DefaultValue("0")] Int32? page, [DefaultValue("50")]Int32? limit)
         {
-            BaseResponse game = new BaseResponse("Games found",200);
+            BaseResponse br = new BaseResponse("Games found",200);
             List<JObject> list = Util.Utility.getGames(name,status.ToString(),page,limit);
             foreach (var g in list)
             {
-
-                //copiar RoundId
-                JObject x1 = (JObject)g.SelectToken("CurrentRound");
-                string idValue1 = (string)g["CurrentRound"]["Id"];
-                x1.Remove("Id");
-                g["CurrentRound"] = idValue1;
-
-                //copiar Id
-                JObject x2 = (JObject)g.SelectToken("Id");
-                string idValue2 = (string)g["Id"]["Id"];
-                x2.Remove("Id");
-                g["Id"] = idValue2;
-
-                //copiar Nombre
-                JObject x3 = (JObject)g.SelectToken("Name");
-                string idValue3 = (string)g["Name"]["Name"];
-                x3.Remove("Name");
-                g["Name"] = idValue3;
+                Util.Utility.cleanGame(g);
 
                 //copiar Jugadores
-                Util.Utility.ConvertirObjetoPlayersAArray(g,"players");
-                Util.Utility.ConvertirObjetoPlayersAArray(g, "enemies");
-                //Util.Utility.ConvertirPropiedadesAMinuscula(g);
+                Util.Utility.ConvertirObjetoPlayersAArray(g,"Players");
+                Util.Utility.ConvertirObjetoPlayersAArray(g, "Enemies");
             }
-            string jsonString = JsonConvert.SerializeObject(game);
+            string jsonString = JsonConvert.SerializeObject(br);
 
             JObject rss = JObject.Parse(jsonString);
             JArray dataArray = new JArray();
@@ -145,34 +127,11 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject customers = (JObject)rss.SelectToken("Data");
                 customers.Remove("UpdatedAt");
                 customers.Remove("CreatedAt");
-                customers.Remove("Pdw");
-                customers.Remove("Owner");
 
-                //copiar RoundId
-                JObject x1 = (JObject)customers.SelectToken("CurrentRound");
-                string idValue1 = (string)customers["CurrentRound"]["Id"];
-                x1.Remove("Id");
-                customers["CurrentRound"] = idValue1;
-
-                //copiar Id
-                JObject x2 = (JObject)customers.SelectToken("Id");
-                string idValue2 = (string)customers["Id"]["Id"];
-                x2.Remove("Id");
-                customers["Id"] = idValue2;
-
-                //copiar Nombre
-                JObject x3 = (JObject)customers.SelectToken("Name");
-                string idValue3 = (string)customers["Name"]["Name"];
-                x3.Remove("Name");
-                customers["Name"] = idValue3;
-
-
-                //copiar grupo, si existe
-                //JObject x4 = (JObject)customers.SelectToken("Name");
-
+                Util.Utility.cleanGame(customers);
 
                 //copiar Jugadores
-                Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
+                Util.Utility.ConvertirObjetoPlayersAArray(rss, "Players");
                 Util.Utility.ConvertirPropiedadesAMinuscula(rss);
 
                 return StatusCode(201, rss);

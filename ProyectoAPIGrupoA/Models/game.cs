@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.ComponentModel;
@@ -60,6 +61,9 @@ namespace ProyectoAPIGrupoA.Models
         [IgnoreDataMember]
         public string Pdw { get => pdw; set => pdw = value; }
 
-        
+        internal JObject SelectToken(string v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

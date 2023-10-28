@@ -60,7 +60,7 @@ namespace ProyectoAPIGrupoA.Util
 
             if (playersProperty != null)
             {
-                // Obtener el valor de la propiedad "Players"
+                // Obtener el valor de la propiedad 
                 JToken playersValue = playersProperty.Value;
 
                 if (playersValue.Type == JTokenType.Array)
@@ -106,7 +106,6 @@ namespace ProyectoAPIGrupoA.Util
                 {
                     roundExist = true;
                 }
-
             }
             return roundExist;
 
@@ -264,9 +263,9 @@ namespace ProyectoAPIGrupoA.Util
 
             for (int i = 0; i < roundList.Count(); i++)
             {
-                if (roundList[i].Id.Id == game.Id.Id)
+                if (roundList[i].GameId.Id == game.Id.Id)
                 {
-                    string json = JsonConvert.SerializeObject(gameList[i], converter);
+                    string json = JsonConvert.SerializeObject(roundList[i], converter);
                     JObject jsonObject = JObject.Parse(json);
                     roundL.Add(jsonObject);
                 }          
@@ -275,6 +274,50 @@ namespace ProyectoAPIGrupoA.Util
             return roundL;
         }
 
+        public static void cleanGame(JObject g)
+        {
+            //copiar RoundId
+            JObject x1 = (JObject)g.SelectToken("CurrentRound");
+            string idValue1 = (string)g["CurrentRound"]["Id"];
+            x1.Remove("Id");
+            g["CurrentRound"] = idValue1;
+
+            //copiar Id
+            JObject x2 = (JObject)g.SelectToken("Id");
+            string idValue2 = (string)g["Id"]["Id"];
+            x2.Remove("Id");
+            g["Id"] = idValue2;
+
+            //copiar Nombre
+            JObject x3 = (JObject)g.SelectToken("Name");
+            string idValue3 = (string)g["Name"]["Name"];
+            x3.Remove("Name");
+            g["Name"] = idValue3;
+        }
+
+        public static void cleanRound(JObject g)
+        {
+            //copiar Id
+            JObject x2 = (JObject)g.SelectToken("Id");
+            string idValue2 = (string)g["Id"]["Id"];
+            x2.Remove("Id");
+            g["Id"] = idValue2;
+
+            JObject votesObject = (JObject)g["Votes"];
+            JToken roundVotesToken = votesObject.SelectToken("RoundVotes");
+
+            if (roundVotesToken != null)
+            {
+                List<bool> roundVotes = roundVotesToken.ToObject<List<bool>>();
+
+                // Remueve la propiedad "Votes" existente
+                g.Remove("Votes");
+
+                // Agrega una nueva propiedad "votes" con el arreglo de booleanos
+                g.Add("votes", new JArray(roundVotes));
+            }
+
+        }
         //public static bool verifyPlayersExist(Game game, GroupProposal group)
         //{
         //    bool gameExist = true;

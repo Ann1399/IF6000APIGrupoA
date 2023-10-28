@@ -25,7 +25,7 @@
             Game Start
             </summary>
         </member>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.getRound(System.String,System.String,System.String)">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.getRounds(System.String,System.String,System.String)">
             <summary>
             Get Rounds
             </summary>
@@ -40,21 +40,15 @@
             Propose a group
             </summary>    
         </member>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.voteGroup(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Controllers.PlayersController.Vote)">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.voteGroup(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Models.Vote)">
             <summary>
             Vote Group
             </summary>
         </member>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.submitAction(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Controllers.PlayersController.Action)">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.submitAction(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Models.Action)">
             <summary>
             Submit action as member of the Round group
             </summary>
-        </member>
-        <member name="P:ProyectoAPIGrupoA.Controllers.PlayersController.Vote.vote">
-            <example>false</example>
-        </member>
-        <member name="P:ProyectoAPIGrupoA.Controllers.PlayersController.Action.action">
-            <example>false</example>
         </member>
         <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.Nullable{ProyectoAPIGrupoA.Models.GameStatus},System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
@@ -76,10 +70,16 @@
              <response code="200">Game Created</response>
             
         </member>
+        <member name="P:ProyectoAPIGrupoA.Models.Action.action">
+            <example>false</example>
+        </member>
         <member name="F:ProyectoAPIGrupoA.Models.GameStatus.lobby">
             <summary>
             Possible values are 'lobby' (default), 'rounds', and 'ended'.
             </summary>
+        </member>
+        <member name="P:ProyectoAPIGrupoA.Models.Vote.vote">
+            <example>false</example>
         </member>
     </members>
 </doc>
