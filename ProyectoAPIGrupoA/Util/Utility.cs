@@ -388,7 +388,6 @@ namespace ProyectoAPIGrupoA.Util
                 limit = 50;
             }
 
-            // Calcular el índice de inicio
             int startIndex = (int)(page * limit.Value);
 
             // Calcular el índice de final
@@ -399,13 +398,22 @@ namespace ProyectoAPIGrupoA.Util
                 ? gameList
                 : gameList.Where(game => game.Status.ToString() == status).ToList();
 
-            // Asegurarse de que el índice de inicio esté dentro de los límites
-            if (startIndex < 0) startIndex = 0;
-            if (startIndex >= filteredGames.Count) startIndex = filteredGames.Count - 1;
+            // Asegurarse de que el índice de inicio no sea mayor que el tamaño de la lista
+            if (startIndex >= filteredGames.Count)
+            {
+                startIndex = filteredGames.Count - 1;
+            }
 
             // Asegurarse de que el índice de final no exceda el tamaño de la lista
-            if (endIndex > filteredGames.Count) endIndex = filteredGames.Count;
-
+            if (endIndex > filteredGames.Count)
+            {
+                endIndex = filteredGames.Count;
+            }
+            // Asegurarse de que el índice de inicio esté dentro de los límites
+            if (startIndex < 0)
+            {
+                startIndex = 0;
+            }
             // Obtener los juegos de la página actual
             for (int i = startIndex; i < endIndex; i++)
             {
@@ -413,7 +421,6 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 gameL.Add(jsonObject);
             }
-
             return gameL;
         }
 
@@ -670,9 +677,6 @@ namespace ProyectoAPIGrupoA.Util
             return verify;
         }
 
-    //            }
-    //            return verify;
-    //        }
     //        public static bool psychosWin(Game game)//Verifica si el jugador pertenece al grupo enviado
     //        {
     //            bool verify = false;
@@ -712,6 +716,35 @@ namespace ProyectoAPIGrupoA.Util
             }
         }
 
+        static public bool verifyAlreadyVote(string roundId, string player)
+        {
+            bool verify = false;
+            for (int i = 0; i < roundList.Count(); i++)
+            {
+                if (roundList[i].Id.Id == roundId )
+                {
+                    if (roundList[i].AlreadyVote.Contains(player))
+                    {
+                        verify = true;
+                    }
+                    
+                }
+            }
+            return verify;
+        }
+        static public void setRoundPhase(round r)
+        {
+            if(r.Phase == roundPhase.vote1)
+            {
+                r.Phase = roundPhase.vote2;
+            }else if(r.Phase == roundPhase.vote2)
+            {
+                r.Phase = roundPhase.vote3;
+            }else if(r.Phase != roundPhase.vote3)
+            {
+                r.Phase = roundPhase.vote3;
+            }
+        }
         public static bool verifyPlayersCount(game game)
         {
             bool verify = true;

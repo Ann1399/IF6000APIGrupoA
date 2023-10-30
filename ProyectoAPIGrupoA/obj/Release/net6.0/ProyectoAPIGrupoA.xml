@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProyectoAPIGrupoA</name>
+    </assembly>
+    <members>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.Get(System.String,System.String,System.String)">
+            <summary>
+            Get Game
+            </summary>
+            <remarks>Gets the content of a game. Returns an error if it doesn't exist</remarks>
+             <param name="gameId"></param>
+             <param name="password"></param>
+             <param name="player"></param>
+             <response code="200">returns all games</response>
+             
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.joinGame(System.String,System.String,System.String,ProyectoAPIGrupoA.Models.gamePlayerName)">
+            <summary>
+            Join Game
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.gameStart(System.String,System.String,System.String)">
+            <summary>
+            Game Start
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.getRounds(System.String,System.String,System.String)">
+            <summary>
+            Get Rounds
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.showRound(System.String,System.String,System.String,System.String)">
+            <summary>
+            Show Round
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.proposeGroup(System.String,System.String,System.String,System.String,System.String[])">
+            <summary>
+            Propose a group
+            </summary>    
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.voteGroup(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Models.Vote)">
+            <summary>
+            Vote Group
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.submitAction(System.String,System.String,System.String,System.String,ProyectoAPIGrupoA.Models.Action)">
+            <summary>
+            Submit action as member of the Round group
+            </summary>
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.Get(System.String,System.Nullable{ProyectoAPIGrupoA.Models.GameStatus},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Game Search
+            </summary>
+            <remarks>By passing in the appropriate options, you can search for games in the system</remarks>
+             <param name="name">filter games where query string is part of the name</param>
+             <param name="status">filter games based on status</param>
+             <param name="page">number of records to skip for pagination</param>
+             <param name="limit">maximum number of records to return</param>
+             <response code="200">returns all games</response>
+             
+        </member>
+        <member name="M:ProyectoAPIGrupoA.Controllers.PublicController.create(ProyectoAPIGrupoA.Models.GameBase)">
+            <summary>
+            Game Create
+            </summary>
+            <remarks>By passing in the appropriate options, you can create a game.Password is optional</remarks>
+             <response code="200">Game Created</response>
+            
+        </member>
+        <member name="P:ProyectoAPIGrupoA.Models.Action.action">
+            <example>false</example>
+        </member>
+        <member name="F:ProyectoAPIGrupoA.Models.GameStatus.lobby">
+            <summary>
+            Possible values are 'lobby' (default), 'rounds', and 'ended'.
+            </summary>
+        </member>
+        <member name="P:ProyectoAPIGrupoA.Models.Vote.vote">
+            <example>false</example>
+        </member>
+    </members>
+</doc>
