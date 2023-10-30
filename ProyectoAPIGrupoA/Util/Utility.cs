@@ -126,12 +126,12 @@ namespace ProyectoAPIGrupoA.Util
 
 
         }
-        public static bool existPlayer(game game, string value)
+        public static bool existPlayer(game game, string player)
         {
             bool playerExist = false;
             for (int j = 0; j < game.Players.Count(); j++)
             {
-                if (game.Players[j].PlayerName == value)
+                if (game.Players[j].PlayerName == player)
                 {
                     playerExist = true;
                 }
@@ -388,33 +388,30 @@ namespace ProyectoAPIGrupoA.Util
                 limit = 50;
             }
 
-            for (int i = 0; i < limit; i++)
+            // Calcular el índice de inicio
+            int startIndex = (int)(page * limit.Value);
+
+            // Calcular el índice de final
+            int endIndex = startIndex + limit.Value;
+
+            // Filtrar juegos según el estado (si se proporciona)
+            var filteredGames = string.IsNullOrEmpty(status)
+                ? gameList
+                : gameList.Where(game => game.Status.ToString() == status).ToList();
+
+            // Asegurarse de que el índice de inicio esté dentro de los límites
+            if (startIndex < 0) startIndex = 0;
+            if (startIndex >= filteredGames.Count) startIndex = filteredGames.Count - 1;
+
+            // Asegurarse de que el índice de final no exceda el tamaño de la lista
+            if (endIndex > filteredGames.Count) endIndex = filteredGames.Count;
+
+            // Obtener los juegos de la página actual
+            for (int i = startIndex; i < endIndex; i++)
             {
-                if (i < gameList.Count())
-                {
-                    if (name == null && status == "" && page == null && limit == null)
-                    {
-                        string json = JsonConvert.SerializeObject(gameList[i], converter);
-                        JObject jsonObject = JObject.Parse(json);
-                        gameL.Add(jsonObject);
-                    }
-                    else
-                    {
-                        if ((status != null || status != "") && gameList[i].Status.ToString() == status)
-                        {
-                            string json = JsonConvert.SerializeObject(gameList[i]);
-                            JObject jsonObject = JObject.Parse(json);
-                            gameL.Add(jsonObject);
-                        }
-                        else if ((status == null || status == "") && gameList[i].Status.ToString() == "lobby")
-                        {
-                            string json = JsonConvert.SerializeObject(gameList[i], converter);
-                            JObject jsonObject = JObject.Parse(json);
-                            gameL.Add(jsonObject);
-                        }
-                    }
-                }
-                else { break; }
+                string json = JsonConvert.SerializeObject(filteredGames[i], converter);
+                JObject jsonObject = JObject.Parse(json);
+                gameL.Add(jsonObject);
             }
 
             return gameL;
@@ -435,7 +432,7 @@ namespace ProyectoAPIGrupoA.Util
         }
 
         //errores para Create Game
-        public static List<JObject> getErrors(string? name, string? owner, string? password)
+        public static List<JObject> getCreateErrors(string? name, string? owner, string? password)
         {
             List<JObject> eL = new List<JObject>();
             if (existGame(name))
@@ -468,7 +465,32 @@ namespace ProyectoAPIGrupoA.Util
             }
             return eL;
         }
-
+        public static List<JObject> getRoundErrors(string gameId, string? password, string player)
+        {
+            List<JObject> eL = new List<JObject>();
+            if (existGameId(gameId) == false)
+            {
+                errorMessage e = new errorMessage("Game does not exists", 404);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (existGameId(gameId) == true&&(player.Length < 3 || player.Length > 20 || player == null))
+            {
+                errorMessage e = new errorMessage("Invalid or missing game name", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || getGameId(gameId).Id.Id != password))
+            {
+                errorMessage e = new errorMessage("Invalid password", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            return eL;
+        }
         public static List<JObject> getJoinErrors(string? name, string? password, string id)
         {
             List<JObject> eL = new List<JObject>();
@@ -495,6 +517,42 @@ namespace ProyectoAPIGrupoA.Util
             }
             return eL;
         }
+
+        public static List<JObject> getSearchErrors(string? name,string? status, Int32? limit, Int32? page)
+        {
+            List<JObject> eL = new List<JObject>();
+
+            if (name!=null&&(name.Length<3 || name.Length>10 || name == ""))
+            {
+                errorMessage e = new errorMessage("Invalid or missing game name", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (status != "lobby" && status != "rounds"&& status != "ended")
+            {
+                errorMessage e = new errorMessage("Invalid game status", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (limit < 0)
+            {
+                errorMessage e = new errorMessage("Invalid page number", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (page <0)
+            {
+                errorMessage e = new errorMessage("Invalid limit number", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            return eL;
+        }
+
 
         //        public static bool verifyPlayerSelection(Game game, string name)//Verifica si el jugador ya eligió un camino
         //        {

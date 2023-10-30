@@ -33,8 +33,37 @@ namespace ProyectoAPIGrupoA.Controllers
         [Tags("Public","Players")]
 
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public ActionResult Get( string? name, GameStatus? status, [DefaultValue("0")] Int32? page, [DefaultValue("50")]Int32? limit)
+        public ActionResult Get( string? name, [DefaultValue(GameStatus.lobby)] GameStatus? status, [DefaultValue("0")] Int32? page, [DefaultValue("50")]Int32? limit)
         {
+            if (name != null &&(name.Length < 3 || name.Length > 10 || name == ""))
+            {
+                BaseResponse br1 = new BaseResponse("Invalid or missing game name", 400);
+                List<JObject> list1 = Util.Utility.getSearchErrors(name, status.ToString(), limit, page);
+                JObject rs = Util.Utility.errorsToBaseResposne(list1, br1);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (status != null &&(status.ToString() != "lobby" && status.ToString() != "rounds" && status.ToString() != "ended"))
+            {
+                BaseResponse br2 = new BaseResponse("Invalid game status",400);
+                List<JObject> list2 = Util.Utility.getSearchErrors(name,status.ToString(),limit,page);
+                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (limit < 0)
+            {
+                BaseResponse br3 = new BaseResponse("Invalid page number", 400);
+                List<JObject> list3 = Util.Utility.getSearchErrors(name, status.ToString(), limit, page);
+                JObject rs = Util.Utility.errorsToBaseResposne(list3, br3);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (page < 0)
+            {
+                BaseResponse br4 = new BaseResponse("Invalid limit number", 400);
+                List<JObject> list4 = Util.Utility.getSearchErrors(name, status.ToString(), limit, page);
+                JObject rs = Util.Utility.errorsToBaseResposne(list4, br4);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+
             BaseResponse br = new BaseResponse("Games found",200);
             List<JObject> list = Util.Utility.getGames(name,status.ToString(),page,limit);
             foreach (var g in list)
@@ -75,7 +104,7 @@ namespace ProyectoAPIGrupoA.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return StatusCode(406, new errorMessage("missing game owner or password parameters",406));
+                return StatusCode(406, new errorMessage("Invalid Model",406));
 
             }
 
@@ -93,21 +122,21 @@ namespace ProyectoAPIGrupoA.Controllers
             if (gamebase.Name.Length < 3 || gamebase.Name.Length > 20 || gamebase.Name == null)
             {
                 BaseResponse br = new BaseResponse("Invalid or missing game name",400);
-                List<JObject> list = Util.Utility.getErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
+                List<JObject> list = Util.Utility.getCreateErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
                 JObject rs = Util.Utility.errorsToBaseResposne(list,br);
                 return StatusCode(400,Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (gamebase.Owner.Length < 3 || gamebase.Owner.Length > 20 || gamebase.Owner == null)
             {
                 BaseResponse br = new BaseResponse("Invalid or missing game owner", 400);
-                List<JObject> list = Util.Utility.getErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
+                List<JObject> list = Util.Utility.getCreateErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (gamebase.Password.Length < 3 || gamebase.Password.Length > 20)
             {
                 BaseResponse br = new BaseResponse("Invalid password", 400);
-                List<JObject> list = Util.Utility.getErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
+                List<JObject> list = Util.Utility.getCreateErrors(gamebase.Name, gamebase.Owner, gamebase.Password);
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }

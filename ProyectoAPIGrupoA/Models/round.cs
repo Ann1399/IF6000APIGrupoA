@@ -29,15 +29,15 @@ namespace ProyectoAPIGrupoA.Models
             this.votes = new roundVote();
             this.actions = new List<bool>();
         }
-        public roundId Id { get =>id; set => id = value; }
-        public gamePlayerName Leader { get => leader; set => leader = value; }
-
         public roundStatus Status { get => status; set => status = value; }
-        public roundResult Result { get => result; set => result = value; }
         public roundPhase Phase { get => phase; set => phase = value; }
+        public roundResult Result { get => result; set => result = value; }
+        public gamePlayerName Leader { get => leader; set => leader = value; }
         public List<gamePlayerName> Group { get => group; set => group = value; }
 
         public roundVote Votes { get => votes; set => votes = value; }
+        public roundId Id { get => id; set => id = value; }
+
         [IgnoreDataMember]
         public gameId GameId { get => gameId; set => gameId = value; }
         [IgnoreDataMember]
