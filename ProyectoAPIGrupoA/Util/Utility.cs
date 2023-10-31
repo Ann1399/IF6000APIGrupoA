@@ -159,29 +159,29 @@ namespace ProyectoAPIGrupoA.Util
 
 
         // verifica los jugadores y las rondas para proponer el grupo
-        public static bool verifyPlayersCount(game gameInfo, List<gamePlayerName> playerList, List<JObject> round)
+        public static bool verifyPlayersCount(game gameInfo, groupModel playerList, List<JObject> round)
         {
             bool verify = false;
 
             if (gameInfo.Players.Count == 5)
             {
-                if (round.Count == 1 && playerList.Count == 2)
+                if (round.Count == 1 && playerList.group.Count == 2)
                 {
                     verify = true;
                 }
-                else if (round.Count == 2 && playerList.Count == 3)
+                else if (round.Count == 2 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 3 && playerList.Count == 2)
+                else if (round.Count == 3 && playerList.group.Count == 2)
                 {
                     verify = true;
                 }
-                else if (round.Count == 4 && playerList.Count == 3)
+                else if (round.Count == 4 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 5 && playerList.Count == 3)
+                else if (round.Count == 5 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
@@ -189,23 +189,23 @@ namespace ProyectoAPIGrupoA.Util
             }
             else if (gameInfo.Players.Count == 6)
             {
-                if (round.Count == 1 && playerList.Count == 2)
+                if (round.Count == 1 && playerList.group.Count == 2)
                 {
                     verify = true;
                 }
-                else if (round.Count == 2 && playerList.Count == 3)
+                else if (round.Count == 2 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 3 && playerList.Count == 4)
+                else if (round.Count == 3 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 4 && playerList.Count == 3)
+                else if (round.Count == 4 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 5 && playerList.Count == 4)
+                else if (round.Count == 5 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
@@ -213,23 +213,23 @@ namespace ProyectoAPIGrupoA.Util
             }
             else if (gameInfo.Players.Count == 7)
             {
-                if (round.Count == 1 && playerList.Count == 2)
+                if (round.Count == 1 && playerList.group.Count == 2)
                 {
                     verify = true;
                 }
-                else if (round.Count == 2 && playerList.Count == 3)
+                else if (round.Count == 2 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 3 && playerList.Count == 3)
+                else if (round.Count == 3 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 4 && playerList.Count == 4)
+                else if (round.Count == 4 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 5 && playerList.Count == 4)
+                else if (round.Count == 5 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
@@ -237,23 +237,23 @@ namespace ProyectoAPIGrupoA.Util
             }
             else if (gameInfo.Players.Count == 8)
             {
-                if (round.Count == 1 && playerList.Count == 3)
+                if (round.Count == 1 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 2 && playerList.Count == 4)
+                else if (round.Count == 2 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 3 && playerList.Count == 4)
+                else if (round.Count == 3 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 4 && playerList.Count == 5)
+                else if (round.Count == 4 && playerList.group.Count == 5)
                 {
                     verify = true;
                 }
-                else if (round.Count == 5 && playerList.Count == 5)
+                else if (round.Count == 5 && playerList.group.Count == 5)
                 {
                     verify = true;
                 }
@@ -261,23 +261,23 @@ namespace ProyectoAPIGrupoA.Util
             }
             else if (gameInfo.Players.Count == 9)
             {
-                if (round.Count == 1 && playerList.Count == 3)
+                if (round.Count == 1 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 2 && playerList.Count == 4)
+                else if (round.Count == 2 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 3 && playerList.Count == 4)
+                else if (round.Count == 3 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 4 && playerList.Count == 5)
+                else if (round.Count == 4 && playerList.group.Count == 5)
                 {
                     verify = true;
                 }
-                else if (round.Count == 5 && playerList.Count == 5)
+                else if (round.Count == 5 && playerList.group.Count == 5)
                 {
                     verify = true;
                 }
@@ -285,23 +285,23 @@ namespace ProyectoAPIGrupoA.Util
             }
             else if (gameInfo.Players.Count == 10)
             {
-                if (round.Count == 1 && playerList.Count == 3)
+                if (round.Count == 1 && playerList.group.Count == 3)
                 {
                     verify = true;
                 }
-                else if (round.Count == 2 && playerList.Count == 4)
+                else if (round.Count == 2 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 3 && playerList.Count == 4)
+                else if (round.Count == 3 && playerList.group.Count == 4)
                 {
                     verify = true;
                 }
-                else if (round.Count == 4 && playerList.Count == 5)
+                else if (round.Count == 4 && playerList.group.Count == 5)
                 {
                     verify = true;
                 }
-                else if (round.Count == 5 && playerList.Count == 5)
+                else if (round.Count == 5 && playerList.group.Count == 5)
                 {
                     verify = true;
                 }
@@ -698,32 +698,33 @@ namespace ProyectoAPIGrupoA.Util
 
         }
 
-        //        public static bool verifyGameWinner(Game game)//Verifica si hay un bando ya es ganador
-        //        {
-        //            bool verify = false;
-        //            int countPsycho = 0;
-        //            int countExem = 0;
-        //            for (int i = 0; i < game.PsychoWin.Count(); i++)
-        //            {
-        //                if (game.PsychoWin[i] == true)
-        //                {
-        //                    countPsycho++;
-        //                }
-        //                else
-        //                {
-        //                    countExem++;
-        //                }
+        public static bool verifyGameWinner(game game) //Verifica si hay un bando ya es ganador
+        {
+            bool verify = false;
+            int countCitizen = 0;
+            int countEnemies = 0;
+            for (int i = 0; i < roundList.Count(); i++)
+            {
+                if (roundList[i].GameId==game.Id)
+                {
+                    if (roundList[i].Result == roundResult.citizen)
+                    {
+                        countCitizen++;
+                    }
+                    else if (roundList[i].Result == roundResult.enemies)
+                    {
+                        countEnemies++;
+                    }
+                }             
 
+            }
+            if (countCitizen == 3 || countEnemies == 3)
+            {
+                verify = true;
+            }
 
-
-        //            }
-        //            if (countPsycho == 3 || countExem == 3)
-        //            {
-        //                verify = true;
-        //            }
-
-        //            return verify;
-        //        }
+            return verify;
+        }
 
         public static bool VerifyGroupList(round r, string name)
         {

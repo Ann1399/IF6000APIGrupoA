@@ -222,7 +222,8 @@ namespace ProyectoAPIGrupoA.Controllers
             ///////////////
             g.CurrentRound = r.Id;
             g.Status = GameStatus.rounds;
-            r.Group = g.Players;
+            string leader = Util.Utility.getRandomLeader(g);
+            r.Leader = new gamePlayerName(leader);
             Util.Utility.roundList.Add(r);
             Response.Headers.Add("status", "200 OK");
             Response.Headers.Add("x-msg", "Started successfuly");
@@ -343,7 +344,7 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpPatch]
         [Tags("Players")]
         [Route("/api/games/{gameId}/rounds/{roundId}")]
-        public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] List<gamePlayerName> group)
+        public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] groupModel group)
         {
             game gameInfo = Util.Utility.getGameId(gameId);
             List<JObject> roundList = Util.Utility.getRounds(gameInfo);
@@ -351,9 +352,9 @@ namespace ProyectoAPIGrupoA.Controllers
 
             if (Util.Utility.verifyPlayersCount(gameInfo, group, roundList))
             {
-                for (int i = 0; i < group.Count(); i++)
+                foreach (var item in group.group)
                 {
-                    r.Group.Add(group[i]);
+                    r.Group.Add(new gamePlayerName(item));
                 }
             }
             else
@@ -364,24 +365,29 @@ namespace ProyectoAPIGrupoA.Controllers
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
 
+            r.Status = roundStatus.voting;
+            var converter = new StringEnumConverter();
             BaseResponse br = new BaseResponse("Group Created", 200, r);
 
 
-            string jsonString = JsonConvert.SerializeObject(br);
+            string jsonString = JsonConvert.SerializeObject(br, converter);
 
             JObject rss = JObject.Parse(jsonString);
             JObject customers = (JObject)rss.SelectToken("Data");
 
-            //copiar Id
-            JObject x2 = (JObject)customers.SelectToken("Id");
-            string idValue2 = (string)customers["Id"]["Id"];
-            x2.Remove("Id");
-            customers["Id"] = idValue2;
+            //copiar Id y limpiar votes
+            Util.Utility.cleanRound(customers);
+
+            //copiar leader
+            JObject x3 = (JObject)customers.SelectToken("Leader");
+            string leaderValue = (string)customers["Leader"]["PlayerName"];
+            x3.Remove("Leader");
+            customers["Leader"] = leaderValue;
 
             //copiar Jugadores
-            Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
+            Util.Utility.ConvertirObjetoPlayersAArray(rss, "group");
             Util.Utility.ConvertirPropiedadesAMinuscula(rss);
-            return StatusCode(200, br);
+            return StatusCode(200, rss);
         }
 
 
@@ -395,7 +401,8 @@ namespace ProyectoAPIGrupoA.Controllers
         public ActionResult voteGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Vote vote)
         {
 
-            if (Util.Utility.existGameId(gameId)){
+            if (Util.Utility.existGameId(gameId) == false)
+            {
                 BaseResponse br1 = new BaseResponse("Game does not exists", 404);
                 errorMessage e = new errorMessage("Game does not exists", 404);
                 List<JObject> eL = new List<JObject>();
@@ -405,19 +412,19 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(eL, br1);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if (Util.Utility.existRoundId(roundId)==false)
+            if (Util.Utility.existRoundId(roundId) == false)
             {
                 BaseResponse br2 = new BaseResponse("Invalid Round Id", 404);
                 string jsonString2 = JsonConvert.SerializeObject(br2);
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
             }
-            if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player))
+            if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
                 errorMessage e = new errorMessage("Error occurred", 500);
                 return StatusCode(500, e);
             }
-            if (vote == null || vote.vote != false || vote.vote != true)
+            if (vote == null || !(vote.vote is bool))
             {
                 BaseResponse br3 = new BaseResponse("Invalid or missing vote", 404);
                 errorMessage e = new errorMessage("Invalid or missing vote", 404);
@@ -428,7 +435,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rss3 = Util.Utility.errorsToBaseResposne(eL, br3);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss3));
             }
-            if(Util.Utility.verifyAlreadyVote(roundId, player)==true)
+            if (Util.Utility.verifyAlreadyVote(roundId, player) == true)
             {
                 BaseResponse br4 = new BaseResponse("You have already voted", 409);
                 string jsonString4 = JsonConvert.SerializeObject(br4);
@@ -438,48 +445,65 @@ namespace ProyectoAPIGrupoA.Controllers
             game g = Util.Utility.getGameId(gameId);
             round r = Util.Utility.getRoundId(gameId, roundId);
 
-            if (Util.Utility.VerifyGroupList(r, player))
+
+            r.Votes.RoundVotes.Add(vote.vote);
+            r.AlreadyVote.Add(player);
+            if (r.Votes.RoundVotes.Count() == g.Players.Count())
             {
-                r.Votes.RoundVotes.Add(vote.vote);
-                r.AlreadyVote.Add(player);
-                if (r.Votes.RoundVotes.Count() == g.Players.Count())
+                int trueCount = r.Votes.RoundVotes.Count(vote => vote);
+                int falseCount = r.Votes.RoundVotes.Count(vote => !vote);
+                if (trueCount > falseCount)
                 {
-                    int trueCount = r.Votes.RoundVotes.Count(vote => vote);
-                    int falseCount = r.Votes.RoundVotes.Count(vote => !vote);
-                    if (trueCount > falseCount)
-                    {
-                        r.Status = roundStatus.waiting_on_group;
-                    }
-                    else if (trueCount < falseCount && r.Phase != roundPhase.vote3)
-                    {
-                        Util.Utility.setRoundPhase(r);
-                    }
-                    else if (trueCount < falseCount && r.Phase == roundPhase.vote3)
-                    {
-                        r.Result = roundResult.enemies;
-                        r.Status = roundStatus.ended;
-                        round r2 = new round(g.Id);
-                        g.CurrentRound = r2.Id;
-                    }
+                    r.Status = roundStatus.waiting_on_group;
                 }
+                else if (trueCount < falseCount && r.Phase != roundPhase.vote3)
+                {
+                    for (int i = r.Group.Count - 1; i >= 0; i--)
+                    {
+                        r.Group.RemoveAt(i);
+                    }
+                    for (int i = r.Votes.RoundVotes.Count - 1; i >= 0; i--)
+                    {
+                        r.Votes.RoundVotes.RemoveAt(i);
+                    }
+                    for (int i = r.AlreadyVote.Count - 1; i >= 0; i--)
+                    {
+                        r.AlreadyVote.RemoveAt(i);
+                    }
+                    Util.Utility.setRoundPhase(r);
+                }
+                else if (trueCount < falseCount && r.Phase == roundPhase.vote3)
+                {
+                    r.Result = roundResult.enemies;
+                    r.Status = roundStatus.ended;
+                    round r2 = new round(g.Id);
+                    g.CurrentRound = r2.Id;
+                }
+
             }
             BaseResponse br = new BaseResponse("Game Found", 200, r);
 
-            string jsonString = JsonConvert.SerializeObject(br);
+            var converter = new StringEnumConverter();
+
+
+            string jsonString = JsonConvert.SerializeObject(br, converter);
 
             JObject rss = JObject.Parse(jsonString);
             JObject customers = (JObject)rss.SelectToken("Data");
 
-            //copiar Id
-            JObject x2 = (JObject)customers.SelectToken("Id");
-            string idValue2 = (string)customers["Id"]["Id"];
-            x2.Remove("Id");
-            customers["Id"] = idValue2;
+            //copiar Id y limpiar votes
+            Util.Utility.cleanRound(customers);
+
+            //copiar leader
+            JObject x3 = (JObject)customers.SelectToken("Leader");
+            string leaderValue = (string)customers["Leader"]["PlayerName"];
+            x3.Remove("Leader");
+            customers["Leader"] = leaderValue;
 
             //copiar Jugadores
-            Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
+            Util.Utility.ConvertirObjetoPlayersAArray(rss, "group");
             Util.Utility.ConvertirPropiedadesAMinuscula(rss);
-            return StatusCode(200, br);
+            return StatusCode(200, rss);
         }
 
         ///<summary>
@@ -506,14 +530,22 @@ namespace ProyectoAPIGrupoA.Controllers
                 {
                     r.Result = roundResult.citizen;
                 }
+                if (Util.Utility.verifyGameWinner(g))
+                {
+                    g.Status = GameStatus.ended;
+                    r.Status = roundStatus.ended;
+                    BaseResponse br = new BaseResponse("Game ended", 200, r);
+                    return StatusCode(200, r);
+                }
                 r.Status = roundStatus.ended;
                 round r2 = new round(g.Id);
                 g.CurrentRound = r2.Id;
+                Util.Utility.roundList.Add(r2);
 
-                BaseResponse br = new BaseResponse("round ended", 200, r2);
+                BaseResponse br2 = new BaseResponse("round ended", 200, r2);
                 return StatusCode(200, r2);
             }
-            BaseResponse br2 = new BaseResponse("round ended", 200, r);
+            BaseResponse br3 = new BaseResponse("round ended", 200, r);
             return StatusCode(200, r);
 
         }
