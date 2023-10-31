@@ -35,7 +35,7 @@
             Show Round
             </summary>
         </member>
-        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.proposeGroup(System.String,System.String,System.String,System.String,System.String[])">
+        <member name="M:ProyectoAPIGrupoA.Controllers.PlayersController.proposeGroup(System.String,System.String,System.String,System.String,System.Collections.Generic.List{ProyectoAPIGrupoA.Models.gamePlayerName})">
             <summary>
             Propose a group
             </summary>    

@@ -343,11 +343,49 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpPatch]
         [Tags("Players")]
         [Route("/api/games/{gameId}/rounds/{roundId}")]
-        public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] string[] group)
+        public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] List<gamePlayerName> group)
         {
+            game gameInfo = Util.Utility.getGameId(gameId);
+            List<JObject> roundList = Util.Utility.getRounds(gameInfo);
+            round r = Util.Utility.getRoundId(gameId, roundId);
 
-            return StatusCode(200, "");
+            if (Util.Utility.verifyPlayersCount(gameInfo, group, roundList))
+            {
+                for (int i = 0; i < group.Count(); i++)
+                {
+                    r.Group.Add(group[i]);
+                }
+            }
+            else
+            {
+                BaseResponse br2 = new BaseResponse("", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+
+            BaseResponse br = new BaseResponse("Group Created", 200, r);
+
+
+            string jsonString = JsonConvert.SerializeObject(br);
+
+            JObject rss = JObject.Parse(jsonString);
+            JObject customers = (JObject)rss.SelectToken("Data");
+
+            //copiar Id
+            JObject x2 = (JObject)customers.SelectToken("Id");
+            string idValue2 = (string)customers["Id"]["Id"];
+            x2.Remove("Id");
+            customers["Id"] = idValue2;
+
+            //copiar Jugadores
+            Util.Utility.ConvertirObjetoPlayersAArray(rss, "players");
+            Util.Utility.ConvertirPropiedadesAMinuscula(rss);
+            return StatusCode(200, br);
         }
+
+
+
         /// <summary>
         /// Vote Group
         /// </summary>

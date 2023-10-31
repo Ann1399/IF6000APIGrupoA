@@ -158,103 +158,157 @@ namespace ProyectoAPIGrupoA.Util
         }
 
 
+        // verifica los jugadores y las rondas para proponer el grupo
+        public static bool verifyPlayersCount(game gameInfo, List<gamePlayerName> playerList, List<JObject> round)
+        {
+            bool verify = false;
 
-        //       public static bool verifyPlayersCount(Game game, int count)
-        //        {
-        //            bool verify = false;
+            if (gameInfo.Players.Count == 5)
+            {
+                if (round.Count == 1 && playerList.Count == 2)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 2 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 3 && playerList.Count == 2)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 4 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 5 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
 
-        //            if (game.Players.Count == 5)
-        //            {
-        //                if (game.Rounds.Count() == 1 && count == 2)
-        //                {
-        //                    verify = true;
-        //                }else if (game.Rounds.Count() == 2 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }else if (game.Rounds.Count() == 3 && count == 2)
-        //                {
-        //                    verify = true;
-        //                }else if (game.Rounds.Count() == 4 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }else if (game.Rounds.Count() == 5 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }
+            }
+            else if (gameInfo.Players.Count == 6)
+            {
+                if (round.Count == 1 && playerList.Count == 2)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 2 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 3 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 4 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 5 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
 
-        //            }else if (game.Players.Count == 6)
-        //            {
-        //                if (game.Rounds.Count() == 1 && count == 2)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 2 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 3 && count == 4)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 4 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 5 && count == 4)
-        //                {
-        //                    verify = true;
-        //                }
+            }
+            else if (gameInfo.Players.Count == 7)
+            {
+                if (round.Count == 1 && playerList.Count == 2)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 2 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 3 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 4 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 5 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
 
-        //            }else if (game.Players.Count == 7)
-        //            {
-        //                if (game.Rounds.Count() == 1 && count == 2)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 2 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 3 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 4 && count == 4)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 5 && count == 4)
-        //                {
-        //                    verify = true;
-        //                }
+            }
+            else if (gameInfo.Players.Count == 8)
+            {
+                if (round.Count == 1 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 2 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 3 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 4 && playerList.Count == 5)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 5 && playerList.Count == 5)
+                {
+                    verify = true;
+                }
 
-        //            }else if (game.Players.Count >= 8)
-        //            {
-        //                if (game.Rounds.Count() == 1 && count == 3)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 2 && count == 4)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 3 && count == 4)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 4 && count == 5)
-        //                {
-        //                    verify = true;
-        //                }
-        //                else if (game.Rounds.Count() == 5 && count == 5)
-        //                {
-        //                    verify = true;
-        //                }
+            }
+            else if (gameInfo.Players.Count == 9)
+            {
+                if (round.Count == 1 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 2 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 3 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 4 && playerList.Count == 5)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 5 && playerList.Count == 5)
+                {
+                    verify = true;
+                }
 
-        //            }
+            }
+            else if (gameInfo.Players.Count == 10)
+            {
+                if (round.Count == 1 && playerList.Count == 3)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 2 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 3 && playerList.Count == 4)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 4 && playerList.Count == 5)
+                {
+                    verify = true;
+                }
+                else if (round.Count == 5 && playerList.Count == 5)
+                {
+                    verify = true;
+                }
 
-        //            return verify;
-        //        }
+            }
+            return verify;
+        }
 
         public static List<JObject> getRounds(game game)
         {
