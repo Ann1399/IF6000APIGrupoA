@@ -41,7 +41,7 @@ namespace ProyectoAPIGrupoA.Controllers
         [Tags("Players")]
         [Route("/api/games/{gameId}/")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(GameGet))]
-        public ActionResult Get([Required] string gameId, string password, [Required] string player)
+        public ActionResult Get([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
         {
             if (Util.Utility.existGameId(gameId) == false)
             {
@@ -80,7 +80,6 @@ namespace ProyectoAPIGrupoA.Controllers
             }
 
             game gameFound2 = Util.Utility.getGameId(gameId);
-            gameFound2.Players.Add(new gamePlayerName(player));
             BaseResponse br = new BaseResponse("Game Found", 200, gameFound2);
 
 
@@ -93,7 +92,7 @@ namespace ProyectoAPIGrupoA.Controllers
 
             //copiar Jugadores
             Util.Utility.ConvertirObjetoPlayersAArray(rss2, "players");
-
+            Util.Utility.ConvertirObjetoPlayersAArray(rss2, "enemies");
             return StatusCode(201, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
 
         }
@@ -118,7 +117,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if ((password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password) && Util.Utility.getGameId(gameId).Password == true)
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
                 BaseResponse br2 = new BaseResponse("Invalid password", 400);
                 List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
@@ -273,6 +272,10 @@ namespace ProyectoAPIGrupoA.Controllers
             foreach (var l in list)
             {
                 Util.Utility.cleanRound(l);
+                JObject x3 = (JObject)l.SelectToken("Leader");
+                string leaderValue = (string)l["Leader"]["PlayerName"];
+                x3.Remove("Leader");
+                l["Leader"] = leaderValue;
                 Util.Utility.ConvertirObjetoPlayersAArray(l, "Group");
             }
             string jsonString = JsonConvert.SerializeObject(br);
@@ -326,7 +329,11 @@ namespace ProyectoAPIGrupoA.Controllers
             JObject jsonObject = JObject.Parse(json);
 
             BaseResponse br = new BaseResponse("Results found", 200, jsonObject);
-
+            //copiar leader
+            JObject x3 = (JObject)jsonObject.SelectToken("Leader");
+            string leaderValue = (string)jsonObject["Leader"]["PlayerName"];
+            x3.Remove("Leader");
+            jsonObject["Leader"] = leaderValue;
 
             Util.Utility.cleanRound(jsonObject);
             Util.Utility.ConvertirObjetoPlayersAArray(jsonObject, "Group");
@@ -528,7 +535,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 }
                 else
                 {
-                    r.Result = roundResult.citizen;
+                    r.Result = roundResult.citizens;
                 }
                 if (Util.Utility.verifyGameWinner(g))
                 {
@@ -541,7 +548,8 @@ namespace ProyectoAPIGrupoA.Controllers
                 round r2 = new round(g.Id);
                 g.CurrentRound = r2.Id;
                 Util.Utility.roundList.Add(r2);
-
+                string leader = Util.Utility.getRandomLeader(g);
+                r2.Leader = new gamePlayerName(leader);
                 BaseResponse br2 = new BaseResponse("round ended", 200, r2);
                 return StatusCode(200, r2);
             }

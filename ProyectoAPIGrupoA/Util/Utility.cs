@@ -569,7 +569,7 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            if ((password.Length < 3 || password.Length > 20|| getGameId(id).Id.Id != password)&&getGameId(id).Password==true)
+            if (getGameId(id).Password == true && (password == null || password.Length < 3 || password.Length > 20 || getGameId(id).Pdw != password))
             {
                 errorMessage e = new errorMessage("Invalid password", 400);
                 string json = JsonConvert.SerializeObject(e);
@@ -707,7 +707,7 @@ namespace ProyectoAPIGrupoA.Util
             {
                 if (roundList[i].GameId==game.Id)
                 {
-                    if (roundList[i].Result == roundResult.citizen)
+                    if (roundList[i].Result == roundResult.citizens)
                     {
                         countCitizen++;
                     }

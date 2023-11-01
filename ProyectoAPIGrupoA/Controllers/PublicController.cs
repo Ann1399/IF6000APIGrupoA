@@ -31,11 +31,11 @@ namespace ProyectoAPIGrupoA.Controllers
 
         [HttpGet]
         [Tags("Public","Players")]
-
+        [Route("/api/games/")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public ActionResult Get( string? name, [DefaultValue(GameStatus.lobby)] GameStatus? status, [DefaultValue("0")] Int32? page, [DefaultValue("50")]Int32? limit)
+        public ActionResult Get( string? name, [DefaultValue(GameStatus.lobby)] GameStatus? status, [DefaultValue(0)] Int32? page, [DefaultValue(50)]Int32? limit)
         {
-            if (name != null &&(name.Length < 3 || name.Length > 10 || name == ""))
+            if (name != null &&(name.Length < 3 || name.Length > 20 || name == ""))
             {
                 BaseResponse br1 = new BaseResponse("Invalid or missing game name", 400);
                 List<JObject> list1 = Util.Utility.getSearchErrors(name, status.ToString(), limit, page);
@@ -133,7 +133,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if (gamebase.Password.Length < 3 || gamebase.Password.Length > 20)
+            if (gamebase.Password!=null &&(gamebase.Password.Length < 3 || gamebase.Password.Length > 20))
             {
                 BaseResponse br = new BaseResponse("Invalid password", 400);
                 List<JObject> list = Util.Utility.getCreateErrors(gamebase.Name, gamebase.Owner, gamebase.Password);

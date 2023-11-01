@@ -6,9 +6,9 @@ namespace ProyectoAPIGrupoA.Models
     {
         private string name;
         private string owner;
-        private string password;
+        private string? password;
 
-        public GameBase(string name, string owner, string password)
+        public GameBase(string name, string owner, string? password)
         {
             this.name = name;
             this.owner = owner;
@@ -22,6 +22,6 @@ namespace ProyectoAPIGrupoA.Models
         public string Owner { get => owner; set => owner = value; }
 
         [DefaultValue("Shazam!")]
-        public string Password { get => password; set => password = value; }
+        public string? Password { get => password; set => password = value; }
     }
 }

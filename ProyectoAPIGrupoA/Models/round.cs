@@ -54,9 +54,13 @@ namespace ProyectoAPIGrupoA.Models
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum roundStatus
     {
+        [EnumMember(Value = "waiting-on-leader")]
         waiting_on_leader,
+        [EnumMember(Value = "voting")]
         voting,
+        [EnumMember(Value = "waiting-on-group")]
         waiting_on_group,
+        [EnumMember(Value = "ended")]
         ended
     }
 
@@ -64,7 +68,7 @@ namespace ProyectoAPIGrupoA.Models
     public enum roundResult
     {
         none,
-        citizen,
+        citizens,
         enemies
     }
 
