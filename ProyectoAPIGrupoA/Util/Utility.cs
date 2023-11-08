@@ -309,7 +309,156 @@ namespace ProyectoAPIGrupoA.Util
             }
             return verify;
         }
+        public static string getResponseGroupCount(game gameInfo, List<JObject> round)
+        {
+            string verify = "";
 
+            if (gameInfo.Players.Count == 5)
+            {
+                if (round.Count == 1)
+                {
+                    verify = "Requires a group of 2 members";
+                }
+                else if (round.Count == 2)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 3)
+                {
+                    verify = "Requires a group of 2 members";
+                }
+                else if (round.Count == 4)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 5)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+
+            }
+            else if (gameInfo.Players.Count == 6)
+            {
+                if (round.Count == 1)
+                {
+                    verify = "Requires a group of 2 members";
+                }
+                else if (round.Count == 2)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 3)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 4)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 5)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+
+            }
+            else if (gameInfo.Players.Count == 7)
+            {
+                if (round.Count == 1)
+                {
+                    verify = "Requires a group of 2 members";
+                }
+                else if (round.Count == 2)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 3)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 4)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 5)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+
+            }
+            else if (gameInfo.Players.Count == 8)
+            {
+                if (round.Count == 1)
+                {   
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 2)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 3)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 4)
+                {
+                    verify = "Requires a group of 5 members";
+                }
+                else if (round.Count == 5)
+                {
+                    verify = "Requires a group of 5 members";
+                }
+
+            }
+            else if (gameInfo.Players.Count == 9)
+            {
+                if (round.Count == 1)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 2)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 3)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 4)
+                {
+                    verify = "Requires a group of 5 members";
+                }
+                else if (round.Count == 5)
+                {
+                    verify = "Requires a group of 5 members";
+                }
+
+            }
+            else if (gameInfo.Players.Count == 10)
+            {
+                if (round.Count == 1)
+                {
+                    verify = "Requires a group of 3 members";
+                }
+                else if (round.Count == 2)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 3)
+                {
+                    verify = "Requires a group of 4 members";
+                }
+                else if (round.Count == 4)
+                {
+                    verify = "Requires a group of 5 members";
+                }
+                else if (round.Count == 5)
+                {
+                    verify = "Requires a group of 5 members";
+                }
+
+            }
+            return verify;
+        }
         public static List<JObject> getRounds(game game)
         {
             List<JObject> roundL = new List<JObject>();
@@ -386,23 +535,6 @@ namespace ProyectoAPIGrupoA.Util
         //    return gameExist;
         //}
 
-        //        public static bool password(string value)
-        //        {
-        //            bool gameExist = false;
-        //            for (int i = 0; i < gameList.Count(); i++)
-        //            {
-        //                if (gameList[i].Password == value)
-        //                {
-        //                    gameExist = true;
-        //                }
-
-
-        //            }
-        //            return gameExist;
-
-
-        //        }
-
         public static game getGameId(string gameId)
         {
             game game=null;
@@ -436,15 +568,14 @@ namespace ProyectoAPIGrupoA.Util
         {
             List<JObject> gameL = new List<JObject>();
             var converter = new StringEnumConverter();
-            
-            if(limit == null)
+
+            if (limit == null || page == null || page < 0 || limit <= 0)
             {
-                limit = 50;
+                // Si no se proporcionan limit o page válidos, o son valores negativos, retornar lista vacía
+                return gameL;
             }
 
             int startIndex = (int)(page * limit.Value);
-
-            // Calcular el índice de final
             int endIndex = startIndex + limit.Value;
 
             // Filtrar juegos según el estado (si se proporciona)
@@ -455,7 +586,7 @@ namespace ProyectoAPIGrupoA.Util
             // Asegurarse de que el índice de inicio no sea mayor que el tamaño de la lista
             if (startIndex >= filteredGames.Count)
             {
-                startIndex = filteredGames.Count - 1;
+                startIndex = filteredGames.Count;
             }
 
             // Asegurarse de que el índice de final no exceda el tamaño de la lista
@@ -463,11 +594,7 @@ namespace ProyectoAPIGrupoA.Util
             {
                 endIndex = filteredGames.Count;
             }
-            // Asegurarse de que el índice de inicio esté dentro de los límites
-            if (startIndex < 0)
-            {
-                startIndex = 0;
-            }
+
             // Obtener los juegos de la página actual
             for (int i = startIndex; i < endIndex; i++)
             {
@@ -615,24 +742,18 @@ namespace ProyectoAPIGrupoA.Util
         }
 
 
-        //        public static bool verifyPlayerSelection(Game game, string name)//Verifica si el jugador ya eligió un camino
-        //        {
-        //            bool verify = false;
-        //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
-        //            {
-        //                if (game.Rounds[getRounds(game)].Group[i].Name.Equals(name))
-        //                {
-        //                    if (game.Rounds[getRounds(game)].Group[i].Psycho == null)
-        //                    {
-        //                        verify = true;
-        //                    }
-        //                }
-
-
-        //            }
-        //            return verify;
-
-        //        }
+        public static bool verifyPlayerSelection(game game, groupModel group)//Verifica si el jugador ya eligió un camino
+        {
+            bool verify = true;
+            for (int i = 0; i < game.Players.Count(); i++)
+            {
+                if (group.group.Contains(game.Players[i].PlayerName) == false)
+                {
+                    verify = false;
+                }
+            }
+            return verify;
+        }
         //        public static Group GetGroup(Game game, string name)
         //        {
         //            Group group = null;

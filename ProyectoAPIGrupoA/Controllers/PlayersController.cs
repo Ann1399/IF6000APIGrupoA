@@ -89,7 +89,18 @@ namespace ProyectoAPIGrupoA.Controllers
             JObject customers2 = (JObject)rss2.SelectToken("Data");
 
             Util.Utility.cleanGame(customers2);
-
+            bool verify = false;
+            for (int i = 0; i < Util.Utility.getGameId(gameId).Enemies.Count; i++)
+            {
+                if (Util.Utility.getGameId(gameId).Enemies[i].PlayerName == player)
+                {
+                    verify = true;
+                }
+            }
+            if (verify == false)
+            {
+                customers2["Enemies"] = new JArray();
+            }
             //copiar Jugadores
             Util.Utility.ConvertirObjetoPlayersAArray(rss2, "players");
             Util.Utility.ConvertirObjetoPlayersAArray(rss2, "enemies");
@@ -124,7 +135,26 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
+            if (Util.Utility.getGameId(gameId).Players.Any(player1 => player1.PlayerName == player) == true)
+            {
+                BaseResponse br4 = new BaseResponse("Player is already part of the game", 409);
 
+                string jsonString1 = JsonConvert.SerializeObject(br4);
+
+                JObject rss1 = JObject.Parse(jsonString1);
+
+                return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
+            }
+            if (Util.Utility.getGameId(gameId).Status != GameStatus.lobby)
+            {
+                BaseResponse br4 = new BaseResponse("Game already started", 428);
+
+                string jsonString1 = JsonConvert.SerializeObject(br4);
+
+                JObject rss1 = JObject.Parse(jsonString1);
+
+                return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
+            }
             game g = Util.Utility.getGameId(gameId);
             g.Players.Add(new gamePlayerName(player));
             BaseResponse br = new BaseResponse("Joinned successfuly", 201, g);
@@ -154,7 +184,7 @@ namespace ProyectoAPIGrupoA.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return StatusCode(406, new errorMessage("missing game owner or password parameters", 406));
+                return StatusCode(406, new errorMessage("Invalid Model", 406));
             }
             if (Util.Utility.getGameId(gameId) == null)
             {
@@ -181,7 +211,7 @@ namespace ProyectoAPIGrupoA.Controllers
             }
             if (Util.Utility.getGameId(gameId).Status.ToString() != "lobby")
             {
-                Response.Headers.Add("status", "409 Game already started");
+                Response.Headers.Add("status", "409 Conflict");
                 Response.Headers.Add("x-msg", "Game already started.");
 
                 return StatusCode(409);
@@ -210,15 +240,6 @@ namespace ProyectoAPIGrupoA.Controllers
                 }
             }
             r.GameId = g.Id;
-            ///////////////pruebas---eliminar
-            //round r2 = new round(g.Id);
-            //round r3 = new round(g.Id);
-            //Util.Utility.roundList.Add(r2);
-            //Util.Utility.roundList.Add(r3);
-            //r.Votes.RoundVotes.Add(true);
-            //r.Votes.RoundVotes.Add(false);
-            //r.Votes.RoundVotes.Add(false);
-            ///////////////
             g.CurrentRound = r.Id;
             g.Status = GameStatus.rounds;
             string leader = Util.Utility.getRandomLeader(g);
@@ -228,13 +249,13 @@ namespace ProyectoAPIGrupoA.Controllers
             Response.Headers.Add("x-msg", "Started successfuly");
             return StatusCode(200, "");
         }
+
         ///<summary>
         ///Get Rounds
         ///</summary>
         [HttpGet]
         [Tags("Players")]
         [Route("/api/games/{gameId}/rounds")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult getRounds([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
         {
             if (Util.Utility.existGameId(gameId) == false)
@@ -353,23 +374,61 @@ namespace ProyectoAPIGrupoA.Controllers
         [Route("/api/games/{gameId}/rounds/{roundId}")]
         public ActionResult proposeGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] groupModel group)
         {
-            game gameInfo = Util.Utility.getGameId(gameId);
-            List<JObject> roundList = Util.Utility.getRounds(gameInfo);
+            if (Util.Utility.existGameId(gameId) == false)
+            {
+                BaseResponse br1 = new BaseResponse("Game does not exists", 404);
+                List<JObject> list1 = Util.Utility.getRoundErrors(gameId, password, player);
+                JObject rs = Util.Utility.errorsToBaseResposne(list1, br1);
+                return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            {
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 401);
+                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
+                return StatusCode(401, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (Util.Utility.existRoundId(roundId) == false)
+            {
+                BaseResponse br2 = new BaseResponse("Invalid Round Id", 404);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+            if (Util.Utility.getRoundId(gameId, roundId).Leader.PlayerName.Equals(player) == false)
+            {
+                BaseResponse br2 = new BaseResponse("Youre not the Leader", 404);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+            if (Util.Utility.verifyPlayersCount(Util.Utility.getGameId(gameId), group, Util.Utility.getRounds(Util.Utility.getGameId(gameId))) == false)
+            {
+                BaseResponse br2 = new BaseResponse(Util.Utility.getResponseGroupCount(Util.Utility.getGameId(gameId), Util.Utility.getRounds(Util.Utility.getGameId(gameId))), 428);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+            if (Util.Utility.verifyPlayerSelection(Util.Utility.getGameId(gameId), group) == false)
+            {
+                BaseResponse br2 = new BaseResponse("Group member is not part of the game", 428);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+            if (Util.Utility.getRoundId(gameId, roundId).Status != roundStatus.waiting_on_leader)
+            {
+                BaseResponse br2 = new BaseResponse("It is not the time for proposing groups", 428);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+
             round r = Util.Utility.getRoundId(gameId, roundId);
 
-            if (Util.Utility.verifyPlayersCount(gameInfo, group, roundList))
+            foreach (var item in group.group)
             {
-                foreach (var item in group.group)
-                {
-                    r.Group.Add(new gamePlayerName(item));
-                }
-            }
-            else
-            {
-                BaseResponse br2 = new BaseResponse("", 400);
-                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
-                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+                r.Group.Add(new gamePlayerName(item));
             }
 
             r.Status = roundStatus.voting;
@@ -397,8 +456,6 @@ namespace ProyectoAPIGrupoA.Controllers
             return StatusCode(200, rss);
         }
 
-
-
         /// <summary>
         /// Vote Group
         /// </summary>
@@ -407,7 +464,6 @@ namespace ProyectoAPIGrupoA.Controllers
         [Route("/api/games/{gameId}/rounds/{roundId}")]
         public ActionResult voteGroup([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Vote vote)
         {
-
             if (Util.Utility.existGameId(gameId) == false)
             {
                 BaseResponse br1 = new BaseResponse("Game does not exists", 404);
@@ -425,6 +481,13 @@ namespace ProyectoAPIGrupoA.Controllers
                 string jsonString2 = JsonConvert.SerializeObject(br2);
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            {
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 401);
+                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
+                return StatusCode(401, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
@@ -449,6 +512,14 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rss4 = JObject.Parse(jsonString4);
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss4));
             }
+            if (Util.Utility.getRoundId(gameId, roundId).Status != roundStatus.voting)
+            {
+                BaseResponse br2 = new BaseResponse("It is not the time for proposing groups", 428);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+
             game g = Util.Utility.getGameId(gameId);
             round r = Util.Utility.getRoundId(gameId, roundId);
 
@@ -523,6 +594,49 @@ namespace ProyectoAPIGrupoA.Controllers
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult submitAction([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Action action)
         {
+            if (Util.Utility.existGameId(gameId) == false)
+            {
+                BaseResponse br1 = new BaseResponse("Game does not exists", 404);
+                errorMessage e = new errorMessage("Game does not exists", 404);
+                List<JObject> eL = new List<JObject>();
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+                JObject rs = Util.Utility.errorsToBaseResposne(eL, br1);
+                return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (Util.Utility.existRoundId(roundId) == false)
+            {
+                BaseResponse br2 = new BaseResponse("Invalid Round Id", 404);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }       
+            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            {
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 401);
+                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
+                return StatusCode(401, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (action == null || !(action.action is bool))
+            {
+                BaseResponse br3 = new BaseResponse("Invalid or missing vote", 404);
+                errorMessage e = new errorMessage("Invalid or missing vote", 404);
+                List<JObject> eL = new List<JObject>();
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+                JObject rss3 = Util.Utility.errorsToBaseResposne(eL, br3);
+                return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss3));
+            }
+            if (Util.Utility.getRoundId(gameId, roundId).Group.Contains(new gamePlayerName(player))==false)
+            {
+                BaseResponse br2 = new BaseResponse("You cannot contribute in this round", 403);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(403, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
 
             game g = Util.Utility.getGameId(gameId);
             round r = Util.Utility.getRoundId(gameId, roundId);
@@ -553,7 +667,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 BaseResponse br2 = new BaseResponse("round ended", 200, r2);
                 return StatusCode(200, r2);
             }
-            BaseResponse br3 = new BaseResponse("round ended", 200, r);
+            BaseResponse br4 = new BaseResponse("round ended", 200, r);
             return StatusCode(200, r);
 
         }
