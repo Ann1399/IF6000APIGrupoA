@@ -155,7 +155,19 @@ namespace ProyectoAPIGrupoA.Controllers
 
                 return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
             }
-            game g = Util.Utility.getGameId(gameId);
+            if (Util.Utility.getGameId(gameId).Players.Count()==10)
+            {
+                BaseResponse br4 = new BaseResponse("The game is full", 429);
+
+                string jsonString1 = JsonConvert.SerializeObject(br4);
+
+                JObject rss1 = JObject.Parse(jsonString1);
+
+                return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
+            }
+
+
+            game g = Util.Utility.getGameId(gameId);         
             g.Players.Add(new gamePlayerName(player));
             BaseResponse br = new BaseResponse("Joinned successfuly", 201, g);
 
