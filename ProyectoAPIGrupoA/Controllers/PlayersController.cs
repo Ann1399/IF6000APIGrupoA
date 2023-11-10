@@ -121,21 +121,21 @@ namespace ProyectoAPIGrupoA.Controllers
             {
                 return StatusCode(406, new errorMessage("Invalid format", 406));
             }
-            if (player.Length < 3 || player.Length > 20)
+            if (playerb.PlayerName.Length < 3 || playerb.PlayerName.Length > 20)
             {
                 BaseResponse br1 = new BaseResponse("Invalid or missing game name", 400);
-                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                List<JObject> list = Util.Utility.getJoinErrors(playerb.PlayerName, password, gameId);
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
                 BaseResponse br2 = new BaseResponse("Invalid password", 400);
-                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                List<JObject> list = Util.Utility.getJoinErrors(playerb.PlayerName, password, gameId);
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if (Util.Utility.getGameId(gameId).Players.Any(player1 => player1.PlayerName == player) == true)
+            if (Util.Utility.getGameId(gameId).Players.Any(player1 => player1.PlayerName == playerb.PlayerName) == true)
             {
                 BaseResponse br4 = new BaseResponse("Player is already part of the game", 409);
 
@@ -157,18 +157,18 @@ namespace ProyectoAPIGrupoA.Controllers
             }
             if (Util.Utility.getGameId(gameId).Players.Count()==10)
             {
-                BaseResponse br4 = new BaseResponse("The game is full", 429);
+                BaseResponse br4 = new BaseResponse("The game is full", 409);
 
                 string jsonString1 = JsonConvert.SerializeObject(br4);
 
                 JObject rss1 = JObject.Parse(jsonString1);
 
-                return StatusCode(428, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
+                return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
             }
 
 
             game g = Util.Utility.getGameId(gameId);         
-            g.Players.Add(new gamePlayerName(player));
+            g.Players.Add(new gamePlayerName(playerb.PlayerName));
             BaseResponse br = new BaseResponse("Joinned successfuly", 201, g);
 
 
