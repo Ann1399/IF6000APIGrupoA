@@ -33,7 +33,7 @@ namespace ProyectoAPIGrupoA.Controllers
         [Tags("Public","Players")]
         [Route("/api/games/")]
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
-        public ActionResult Get( string? name, [DefaultValue(GameStatus.lobby)] GameStatus? status, [DefaultValue(0)] Int32? page, [DefaultValue(50)]Int32? limit)
+        public ActionResult Get( string? name,  GameStatus? status, [DefaultValue(0)] Int32? page, [DefaultValue(50)]Int32? limit)
         {
             if (name != null &&(name.Length < 3 || name.Length > 20 || name == ""))
             {

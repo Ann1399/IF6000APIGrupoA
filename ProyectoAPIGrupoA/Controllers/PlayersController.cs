@@ -54,12 +54,43 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(eL, br3);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            if (player == null)
             {
-                BaseResponse br2 = new BaseResponse("Invalid password", 400);
+                BaseResponse br1 = new BaseResponse("Invalid or missing player name", 400);
                 List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            {
+                game gameFound3 = Util.Utility.getGameId(gameId);
+                BaseResponse br2 = new BaseResponse("Invalid Credentials", 400, gameFound3);
+
+
+                string jsonString3 = JsonConvert.SerializeObject(br2);
+
+                JObject rss3 = JObject.Parse(jsonString3);
+                JObject customers3 = (JObject)rss3.SelectToken("Data");
+
+                Util.Utility.cleanGame(customers3);
+                bool verify2 = false;
+                for (int i = 0; i < Util.Utility.getGameId(gameId).Enemies.Count; i++)
+                {
+                    if (Util.Utility.getGameId(gameId).Enemies[i].PlayerName == player)
+                    {
+                        verify2 = true;
+                    }
+                }
+                if (verify2 == false)
+                {
+                    customers3["Enemies"] = new JArray();
+                }
+                //copiar Jugadores
+                Util.Utility.ConvertirObjetoPlayersAArray(rss3, "players");
+                Util.Utility.ConvertirObjetoPlayersAArray(rss3, "enemies");
+
+
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rss3));
             }
             if (Util.Utility.getGameId(gameId).Password == false && Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
@@ -117,32 +148,36 @@ namespace ProyectoAPIGrupoA.Controllers
         //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult joinGame([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] gamePlayerName playerb)
         {
-            if (!ModelState.IsValid || gameId == "(null)" || gameId == null)
+            if (gameId == "(null)" || gameId == null)
             {
                 return StatusCode(406, new errorMessage("Invalid format", 406));
+            }
+            if (playerb.PlayerName == null || player == null)
+            {
+                BaseResponse br1 = new BaseResponse("Invalid or missing player name", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (playerb.PlayerName.Length < 3 || playerb.PlayerName.Length > 20)
             {
                 BaseResponse br1 = new BaseResponse("Invalid or missing game name", 400);
-                List<JObject> list = Util.Utility.getJoinErrors(playerb.PlayerName, password, gameId);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
                 JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
-                BaseResponse br2 = new BaseResponse("Invalid password", 400);
-                List<JObject> list = Util.Utility.getJoinErrors(playerb.PlayerName, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
-                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+                BaseResponse br4 = new BaseResponse("Invalid credentials", 403);
+                string jsonString1 = JsonConvert.SerializeObject(br4);
+                JObject rss1 = JObject.Parse(jsonString1);
+                return StatusCode(403, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
             }
-            if (Util.Utility.getGameId(gameId).Players.Any(player1 => player1.PlayerName == playerb.PlayerName) == true)
+            if (Util.Utility.getGameId(gameId).Players.Any(player1 => player1.PlayerName == player) == true)
             {
                 BaseResponse br4 = new BaseResponse("Player is already part of the game", 409);
-
                 string jsonString1 = JsonConvert.SerializeObject(br4);
-
                 JObject rss1 = JObject.Parse(jsonString1);
-
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
             }
             if (Util.Utility.getGameId(gameId).Status != GameStatus.lobby)
@@ -206,6 +241,22 @@ namespace ProyectoAPIGrupoA.Controllers
 
                 return StatusCode(404);
             }
+            if (player == null || player == "")
+            {
+
+                Response.Headers.Add("status", "400 Not Found");
+                Response.Headers.Add("x-msg", "Invalid or missing player name");
+
+                return StatusCode(400);
+            }
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            {
+                BaseResponse br2 = new BaseResponse("Invalid password", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
+
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
             if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
 
@@ -240,6 +291,7 @@ namespace ProyectoAPIGrupoA.Controllers
             round r = new round(g.Id);
             int enemiesC = Util.Utility.getpsychoscountAtStart(g);
             int count = 0;
+
             while (count < enemiesC)
             {
                 string enemy = Util.Utility.getRandomLeader(g);
@@ -251,6 +303,7 @@ namespace ProyectoAPIGrupoA.Controllers
                     count++;
                 }
             }
+
             r.GameId = g.Id;
             g.CurrentRound = r.Id;
             g.Status = GameStatus.rounds;
@@ -277,6 +330,13 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(list1, br1);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
+            if (player == null || player.Length < 3 || player.Length > 20 || player == "")
+            {
+                BaseResponse br3 = new BaseResponse("Invalid or missing player name", 400);
+                List<JObject> list3 = Util.Utility.getRoundErrors(gameId, password, player);
+                JObject rs = Util.Utility.errorsToBaseResposne(list3, br3);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
             if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
                 BaseResponse br2 = new BaseResponse("Player is not part of the game", 409);
@@ -284,18 +344,11 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
             }
-            if (player.Length < 3 || player.Length > 20 || player == "")
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
-                BaseResponse br3 = new BaseResponse("Invalid or missing player name", 400);
-                List<JObject> list3 = Util.Utility.getRoundErrors(gameId, password, player);
-                JObject rs = Util.Utility.errorsToBaseResposne(list3, br3);
-                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
-            }
-            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
-            {
-                BaseResponse br2 = new BaseResponse("Invalid password", 400);
-                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 400);
+                List<JObject> list4 = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list4, br2);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             game g = Util.Utility.getGameId(gameId);
@@ -334,6 +387,13 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(list1, br1);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
+            if (player == null || player.Length < 3 || player.Length > 20 || player == "")
+            {
+                BaseResponse br3 = new BaseResponse("Invalid or missing player name", 400);
+                List<JObject> list3 = Util.Utility.getRoundErrors(gameId, password, player);
+                JObject rs = Util.Utility.errorsToBaseResposne(list3, br3);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
             if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
                 BaseResponse br2 = new BaseResponse("Player is not part of the game", 409);
@@ -341,19 +401,19 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
             }
-            if (player.Length < 3 || player.Length > 20 || player == "")
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
-                BaseResponse br3 = new BaseResponse("Invalid or missing player name", 400);
-                List<JObject> list3 = Util.Utility.getRoundErrors(gameId, password, player);
-                JObject rs = Util.Utility.errorsToBaseResposne(list3, br3);
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
                 return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            if (Util.Utility.existRoundId(roundId) == false)
             {
-                BaseResponse br2 = new BaseResponse("Invalid password", 400);
-                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
-                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+                BaseResponse br2 = new BaseResponse("Invalid Round Id", 404);
+                string jsonString2 = JsonConvert.SerializeObject(br2);
+                JObject rss2 = JObject.Parse(jsonString2);
+                return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
             }
 
             var converter = new StringEnumConverter();
@@ -393,19 +453,26 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rs = Util.Utility.errorsToBaseResposne(list1, br1);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
-            {
-                BaseResponse br2 = new BaseResponse("Invalid credentials", 401);
-                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
-                return StatusCode(401, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
-            }
             if (Util.Utility.existRoundId(roundId) == false)
             {
                 BaseResponse br2 = new BaseResponse("Invalid Round Id", 404);
                 string jsonString2 = JsonConvert.SerializeObject(br2);
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
+            }
+            if (player == null || player.Length < 3 || player.Length > 20 || player == "")
+            {
+                BaseResponse br3 = new BaseResponse("Invalid or missing player name", 400);
+                List<JObject> list3 = Util.Utility.getGroupErrors(gameId, group, player);
+                JObject rs = Util.Utility.errorsToBaseResposne(list3, br3);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            {
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (Util.Utility.getRoundId(gameId, roundId).Leader.PlayerName.Equals(player) == false)
             {
@@ -414,6 +481,13 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
             }
+            if (group.group == null)
+            {
+                BaseResponse br2 = new BaseResponse("Invalid or missing group", 400);
+                List<JObject> list2 = Util.Utility.getGroupErrors(player, group, player);
+                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }              
             if (Util.Utility.verifyPlayersCount(Util.Utility.getGameId(gameId), group, Util.Utility.getRounds(Util.Utility.getGameId(gameId))) == false)
             {
                 BaseResponse br2 = new BaseResponse(Util.Utility.getResponseGroupCount(Util.Utility.getGameId(gameId), Util.Utility.getRounds(Util.Utility.getGameId(gameId))), 428);
@@ -494,17 +568,19 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
             }
-            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            if (player == null || Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
             {
-                BaseResponse br2 = new BaseResponse("Invalid credentials", 401);
-                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
-                return StatusCode(401, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+                BaseResponse e = new BaseResponse("Invalid or missing player name", 400);
+                List<JObject> list3 = Util.Utility.getRoundErrors(gameId, password, player);
+                JObject rs = Util.Utility.errorsToBaseResposne(list3, e);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
-            if (Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
-                errorMessage e = new errorMessage("Error occurred", 500);
-                return StatusCode(500, e);
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (vote == null || !(vote.vote is bool))
             {
@@ -560,6 +636,7 @@ namespace ProyectoAPIGrupoA.Controllers
                     {
                         r.AlreadyVote.RemoveAt(i);
                     }
+                    r.Status = roundStatus.waiting_on_leader;
                     Util.Utility.setRoundPhase(r);
                 }
                 else if (trueCount < falseCount && r.Phase == roundPhase.vote3)
@@ -623,13 +700,20 @@ namespace ProyectoAPIGrupoA.Controllers
                 string jsonString2 = JsonConvert.SerializeObject(br2);
                 JObject rss2 = JObject.Parse(jsonString2);
                 return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
-            }       
-            if (Util.Utility.getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+            }
+            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
-                BaseResponse br2 = new BaseResponse("Invalid credentials", 401);
-                List<JObject> list2 = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list2, br2);
-                return StatusCode(401, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+                BaseResponse br2 = new BaseResponse("Invalid credentials", 400);
+                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                JObject rs = Util.Utility.errorsToBaseResposne(list, br2);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+            }
+            if (player == null || Util.Utility.existPlayer(Util.Utility.getGameId(gameId), player) == false)
+            {
+                BaseResponse e = new BaseResponse("Invalid or missing player name", 400);
+                List<JObject> list3 = Util.Utility.getRoundErrors(gameId, password, player);
+                JObject rs = Util.Utility.errorsToBaseResposne(list3, e);
+                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
             }
             if (action == null || !(action.action is bool))
             {
@@ -642,7 +726,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 JObject rss3 = Util.Utility.errorsToBaseResposne(eL, br3);
                 return StatusCode(404, Util.Utility.ConvertirPropiedadesAMinuscula(rss3));
             }
-            if (Util.Utility.getRoundId(gameId, roundId).Group.Contains(new gamePlayerName(player))==false)
+            if (Util.Utility.verifyPlayerInGroup(Util.Utility.getRoundId(gameId,roundId),player)==false)
             {
                 BaseResponse br2 = new BaseResponse("You cannot contribute in this round", 403);
                 string jsonString2 = JsonConvert.SerializeObject(br2);
@@ -679,8 +763,28 @@ namespace ProyectoAPIGrupoA.Controllers
                 BaseResponse br2 = new BaseResponse("round ended", 200, r2);
                 return StatusCode(200, r2);
             }
-            BaseResponse br4 = new BaseResponse("round ended", 200, r);
-            return StatusCode(200, r);
+            BaseResponse br4 = new BaseResponse("Action registered", 200, r);
+            var converter = new StringEnumConverter();
+
+
+            string jsonString = JsonConvert.SerializeObject(br4, converter);
+
+            JObject rss = JObject.Parse(jsonString);
+            JObject customers = (JObject)rss.SelectToken("Data");
+
+            //copiar Id y limpiar votes
+            Util.Utility.cleanRound(customers);
+
+            //copiar leader
+            JObject x3 = (JObject)customers.SelectToken("Leader");
+            string leaderValue = (string)customers["Leader"]["PlayerName"];
+            x3.Remove("Leader");
+            customers["Leader"] = leaderValue;
+
+            //copiar Jugadores
+            Util.Utility.ConvertirObjetoPlayersAArray(rss, "group");
+            Util.Utility.ConvertirPropiedadesAMinuscula(rss);
+            return StatusCode(200, rss);
 
         }
     }

@@ -78,8 +78,5 @@
             Possible values are 'lobby' (default), 'rounds', and 'ended'.
             </summary>
         </member>
-        <member name="P:ProyectoAPIGrupoA.Models.Vote.vote">
-            <example>false</example>
-        </member>
     </members>
 </doc>

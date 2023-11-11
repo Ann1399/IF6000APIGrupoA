@@ -574,14 +574,14 @@ namespace ProyectoAPIGrupoA.Util
                 // Si no se proporcionan limit o page válidos, o son valores negativos, retornar lista vacía
                 return gameL;
             }
+            var filteredGames = gameList;
 
             int startIndex = (int)(page * limit.Value);
             int endIndex = startIndex + limit.Value;
-
-            // Filtrar juegos según el estado (si se proporciona)
-            var filteredGames = string.IsNullOrEmpty(status)
-                ? gameList
-                : gameList.Where(game => game.Status.ToString() == status).ToList();
+            if (!string.IsNullOrEmpty(status))
+            {
+                filteredGames = filteredGames.Where(game => game.Status.ToString() == status).ToList();
+            }
 
             // Asegurarse de que el índice de inicio no sea mayor que el tamaño de la lista
             if (startIndex >= filteredGames.Count)
@@ -663,20 +663,14 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            if (existGameId(gameId) == true&&(player.Length < 3 || player.Length > 20 || player == null))
+            if (existGameId(gameId) == true && (player == null || player.Length < 3 || player.Length > 20))
             {
-                errorMessage e = new errorMessage("Invalid or missing game name", 400);
+                errorMessage e = new errorMessage("Invalid or missing player name", 400);
                 string json = JsonConvert.SerializeObject(e);
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            if (getGameId(gameId).Password == true && (password.Length < 3 || password.Length > 20 || getGameId(gameId).Id.Id != password))
-            {
-                errorMessage e = new errorMessage("Invalid password", 400);
-                string json = JsonConvert.SerializeObject(e);
-                JObject jsonObject = JObject.Parse(json);
-                eL.Add(jsonObject);
-            }
+            
             return eL;
         }
         public static List<JObject> getJoinErrors(string? name, string? password, string id)
@@ -689,28 +683,60 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            if (name.Length < 3 || name.Length > 20 || name == null)
+            if ( name == null || name.Length < 3 || name.Length > 20 )
             {
-                errorMessage e = new errorMessage("Invalid or missing game name", 400);
+                errorMessage e = new errorMessage("Invalid or missing player name", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (name == null || name.Length < 3 || name.Length > 20)
+            {
+                errorMessage e = new errorMessage("Invalid or missing player name", 400);
                 string json = JsonConvert.SerializeObject(e);
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
             if (getGameId(id).Password == true && (password == null || password.Length < 3 || password.Length > 20 || getGameId(id).Pdw != password))
             {
-                errorMessage e = new errorMessage("Invalid password", 400);
+                errorMessage e = new errorMessage("Invalid credentials", 400);
                 string json = JsonConvert.SerializeObject(e);
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
             return eL;
         }
-
+        public static List<JObject> getGroupErrors(string? name, groupModel group, string player)
+        {
+            List<JObject> eL = new List<JObject>();
+            if (existGame(name))
+            {
+                errorMessage e = new errorMessage("Game already exists", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (name == null || name.Length < 3 || name.Length > 20)
+            {
+                errorMessage e = new errorMessage("Invalid or missing player name", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            if (group.group == null)
+            {
+                errorMessage e = new errorMessage("Invalid or missing group", 400);
+                string json = JsonConvert.SerializeObject(e);
+                JObject jsonObject = JObject.Parse(json);
+                eL.Add(jsonObject);
+            }
+            return eL;
+        }
         public static List<JObject> getSearchErrors(string? name,string? status, Int32? limit, Int32? page)
         {
             List<JObject> eL = new List<JObject>();
 
-            if (name!=null&&(name.Length<3 || name.Length>10 || name == ""))
+            if (name!=null && (name.Length<3 || name.Length>10 || name == ""))
             {
                 errorMessage e = new errorMessage("Invalid or missing game name", 400);
                 string json = JsonConvert.SerializeObject(e);
@@ -744,15 +770,8 @@ namespace ProyectoAPIGrupoA.Util
 
         public static bool verifyPlayerSelection(game game, groupModel group)//Verifica si el jugador ya eligió un camino
         {
-            bool verify = true;
-            for (int i = 0; i < game.Players.Count(); i++)
-            {
-                if (group.group.Contains(game.Players[i].PlayerName) == false)
-                {
-                    verify = false;
-                }
-            }
-            return verify;
+            bool allMembersInGame = group.group.All(member => game.Players.Any(player => player.PlayerName == member));
+            return allMembersInGame;
         }
         //        public static Group GetGroup(Game game, string name)
         //        {
@@ -789,27 +808,22 @@ namespace ProyectoAPIGrupoA.Util
 
         //            return verify;
         //        }
-        //        public static bool verifyPsychoWin(Game game)//Verifica si los psycho ganaron la ronda
-        //        {
-        //            bool verify = false;
-        //            int countPsycho = 0;
-        //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
-        //            {
-        //                if (game.Rounds[getRounds(game)].Group[i].Psycho == true)
-        //                {
-        //                    countPsycho++;
-        //                }
+        //       
 
+        public static bool verifyPlayerInGroup(round r, string player)
+        {
+            bool verify = false;
 
-
-        //            }
-        //            if (countPsycho>0)
-        //            {
-        //                verify = true;
-        //            }
-
-        //            return verify;
-        //        }
+            for(int i = 0; i < r.Group.Count(); i++) {
+                if (r.Group[i].PlayerName == player)
+                {
+                    verify = true;
+                    break;
+                }
+                
+            }
+            return verify;
+        }
 
         public static string getRandomLeader(game game)
         {
@@ -852,29 +866,6 @@ namespace ProyectoAPIGrupoA.Util
             bool verify = r.Group.Any(player => player.PlayerName == name);
             return verify;
         }
-
-    //        public static bool psychosWin(Game game)//Verifica si el jugador pertenece al grupo enviado
-    //        {
-    //            bool verify = false;
-    //            int countPsycho = 0;
-    //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
-    //            {
-    //                if (game.PsychoWin[i].Equals(true))
-    //                {
-    //                    countPsycho++;
-    //                }
-
-
-
-    //            }
-    //            if (countPsycho==3)
-    //            {
-    //                verify=true;
-    //            }
-
-
-    //            return verify;
-    //        }
 
     public static int getpsychoscountAtStart(game game)
         {
