@@ -158,39 +158,42 @@ namespace ProyectoAPIGrupoA.Controllers
         {
             try
             {
-                return StatusCode(406, new errorMessage("Invalid format", 406));
-            }
-            if (playerb.PlayerName == null || player == null)
-            {
-                BaseResponse br1 = new BaseResponse("Invalid or missing player name", 400);
-                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
-                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
-            }
-            if (playerb.PlayerName.Length < 3 || playerb.PlayerName.Length > 20)
-            {
-                BaseResponse br1 = new BaseResponse("Invalid or missing game name", 400);
-                List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
-                JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
-                return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
-            }
-            if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
-            {
-                BaseResponse br4 = new BaseResponse("Invalid credentials", 401);
-                string jsonString1 = JsonConvert.SerializeObject(br4);
-                JObject rss1 = JObject.Parse(jsonString1);
-                return StatusCode(403, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
-            }
-            if (Util.Utility.getGameId(gameId).Players.Any(player1 => player1.PlayerName == player) == true)
-            {
-                BaseResponse br4 = new BaseResponse("Player is already part of the game", 409);
-                string jsonString1 = JsonConvert.SerializeObject(br4);
-                JObject rss1 = JObject.Parse(jsonString1);
-                return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
-            }
-            if (Util.Utility.getGameId(gameId).Status != GameStatus.lobby)
-            {
-                BaseResponse br4 = new BaseResponse("Game already started", 428);
+                if (!ModelState.IsValid)
+                {
+                    return StatusCode(406, new errorMessage("Invalid Model", 406));
+
+                }
+                if (playerb.PlayerName == null || player == null)
+                {
+                    BaseResponse br1 = new BaseResponse("Invalid or missing player name", 400);
+                    List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                    JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
+                    return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+                }
+                if (playerb.PlayerName.Length < 3 || playerb.PlayerName.Length > 20)
+                {
+                    BaseResponse br1 = new BaseResponse("Invalid or missing game name", 400);
+                    List<JObject> list = Util.Utility.getJoinErrors(player, password, gameId);
+                    JObject rs = Util.Utility.errorsToBaseResposne(list, br1);
+                    return StatusCode(400, Util.Utility.ConvertirPropiedadesAMinuscula(rs));
+                }
+                if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
+                {
+                    BaseResponse br4 = new BaseResponse("Invalid credentials", 401);
+                    string jsonString1 = JsonConvert.SerializeObject(br4);
+                    JObject rss1 = JObject.Parse(jsonString1);
+                    return StatusCode(403, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
+                }
+                if (Util.Utility.getGameId(gameId).Players.Any(player1 => player1.PlayerName == player) == true)
+                {
+                    BaseResponse br4 = new BaseResponse("Player is already part of the game", 409);
+                    string jsonString1 = JsonConvert.SerializeObject(br4);
+                    JObject rss1 = JObject.Parse(jsonString1);
+                    return StatusCode(409, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
+                }
+                if (Util.Utility.getGameId(gameId).Status != GameStatus.lobby)
+                {
+                    BaseResponse br4 = new BaseResponse("Game already started", 428);
 
                     string jsonString1 = JsonConvert.SerializeObject(br4);
 
