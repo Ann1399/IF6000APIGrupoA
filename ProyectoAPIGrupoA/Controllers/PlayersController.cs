@@ -168,7 +168,7 @@ namespace ProyectoAPIGrupoA.Controllers
             }
             if (Util.Utility.getGameId(gameId).Password == true && (password == null || password.Length < 3 || password.Length > 20 || Util.Utility.getGameId(gameId).Pdw != password))
             {
-                BaseResponse br4 = new BaseResponse("Invalid credentials", 403);
+                BaseResponse br4 = new BaseResponse("Invalid credentials", 401);
                 string jsonString1 = JsonConvert.SerializeObject(br4);
                 JObject rss1 = JObject.Parse(jsonString1);
                 return StatusCode(403, Util.Utility.ConvertirPropiedadesAMinuscula(rss1));
