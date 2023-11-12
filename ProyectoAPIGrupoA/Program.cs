@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseSystemd();
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -56,7 +56,13 @@ app.UseSwaggerUI(c =>
 
 
     });
-
+app.MapGet("/", () => {
+    app.Logger.LogInformation("Information - Hello World");
+    app.Logger.LogWarning("Warning - Hello World");
+    app.Logger.LogError("Error - Hello World");
+    app.Logger.LogCritical("Critical - Hello World");
+    return "Hello World!";
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
