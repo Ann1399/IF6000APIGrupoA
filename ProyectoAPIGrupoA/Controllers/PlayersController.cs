@@ -309,6 +309,7 @@ namespace ProyectoAPIGrupoA.Controllers
 
                 game g = Util.Utility.getGameId(gameId);
                 round r = new round(g.Id);
+                round r2 = new round(g.Id);
                 int enemiesC = Util.Utility.getpsychoscountAtStart(g);
                 int count = 0;
 
@@ -326,10 +327,13 @@ namespace ProyectoAPIGrupoA.Controllers
 
                 r.GameId = g.Id;
                 g.CurrentRound = r.Id;
+
                 g.Status = GameStatus.rounds;
                 string leader = Util.Utility.getRandomLeader(g);
                 r.Leader = new gamePlayerName(leader);
+                //r2.Leader = new gamePlayerName(leader);
                 Util.Utility.roundList.Add(r);
+                //Util.Utility.roundList.Add(r2);
                 Response.Headers.Add("status", "200 OK");
                 Response.Headers.Add("x-msg", "Started successfuly");
                 return StatusCode(200, "");
@@ -701,6 +705,9 @@ namespace ProyectoAPIGrupoA.Controllers
                         r.Status = roundStatus.ended;
                         round r2 = new round(g.Id);
                         g.CurrentRound = r2.Id;
+                        string leader = Util.Utility.getRandomLeader(g);
+                        r2.Leader = new gamePlayerName(leader);
+                        Util.Utility.roundList.Add(r2);
                     }
 
                 }

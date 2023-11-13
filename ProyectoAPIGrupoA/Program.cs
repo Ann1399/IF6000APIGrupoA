@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using ProyectoAPIGrupoA.Models;
@@ -7,6 +8,8 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSystemd();
 // Add services to the container.
+
+
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -44,6 +47,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 app.UseSwagger(c =>
     {
         c.RouteTemplate = "api-docs/swagger/{documentname}/swagger.json";
@@ -98,7 +105,5 @@ app.MapWhen(context => !context.Request.IsHttps, app =>
         endpoints.MapControllers();
     });
 });
-
-app.Run();
 
 app.Run();
