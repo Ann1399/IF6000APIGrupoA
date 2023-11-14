@@ -12,7 +12,7 @@ builder.Host.UseSystemd();
 
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
- options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddControllers().Services.AddControllers()
                     .AddNewtonsoftJson(options =>
                     {

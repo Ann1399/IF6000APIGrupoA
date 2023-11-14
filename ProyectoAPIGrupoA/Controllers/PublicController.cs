@@ -1,14 +1,8 @@
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
 using System.ComponentModel;
-using System.Text.Json;
-
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProyectoAPIGrupoA.Controllers
 {
@@ -32,7 +26,6 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpGet]
         [Tags("Public","Players")]
         [Route("/api/games/")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult Get( string? name,  GameStatus? status, [DefaultValue(0)] Int32? page, [DefaultValue(50)]Int32? limit)
         {
             try

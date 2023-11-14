@@ -1,24 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using ProyectoAPIGrupoA.Models;
-using ProyectoIIRedesAPI.Models;
-using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Numerics;
-using System.Security.Cryptography;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Xml.Linq;
+
 using Action = ProyectoAPIGrupoA.Models.Action;
 
 
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProyectoAPIGrupoA.Controllers
 {
@@ -40,7 +30,6 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpGet]
         [Tags("Players")]
         [Route("/api/games/{gameId}/")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(GameGet))]
         public ActionResult Get([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
         {
             try
@@ -153,7 +142,6 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpPut]
         [Tags("Players")]
         [Route("/api/games/{gameId}/")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult joinGame([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] gamePlayerName playerb)
         {
             try
@@ -244,7 +232,6 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpHead]
         [Tags("Players")]
         [Route("/api/games/{gameId}/start/")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult gameStart([Required] string gameId, [FromHeader] string? password, [Required][FromHeader] string player)
         {
             try
@@ -331,9 +318,7 @@ namespace ProyectoAPIGrupoA.Controllers
                 g.Status = GameStatus.rounds;
                 string leader = Util.Utility.getRandomLeader(g);
                 r.Leader = new gamePlayerName(leader);
-                //r2.Leader = new gamePlayerName(leader);
                 Util.Utility.roundList.Add(r);
-                //Util.Utility.roundList.Add(r2);
                 Response.Headers.Add("status", "200 OK");
                 Response.Headers.Add("x-msg", "Started successfuly");
                 return StatusCode(200, "");
@@ -417,7 +402,6 @@ namespace ProyectoAPIGrupoA.Controllers
         [HttpGet]
         [Tags("Players")]
         [Route("/api/games/{gameId}/rounds/{roundId}")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult showRound([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player)
         {
             try
@@ -748,9 +732,7 @@ namespace ProyectoAPIGrupoA.Controllers
         ///</summary>
         [HttpPut]
         [Tags("Players")]
-
         [Route("/api/games/{gameId}/rounds/{roundId}")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Type = typeof(List<GameGet>))]
         public ActionResult submitAction([Required] string gameId, [Required] string roundId, [FromHeader] string? password, [Required][FromHeader] string player, [FromBody] Action action)
         {
             try
@@ -805,7 +787,7 @@ namespace ProyectoAPIGrupoA.Controllers
                     JObject rss2 = JObject.Parse(jsonString2);
                     return StatusCode(403, Util.Utility.ConvertirPropiedadesAMinuscula(rss2));
                 }
-
+                var converter = new StringEnumConverter();
                 game g = Util.Utility.getGameId(gameId);
                 round r = Util.Utility.getRoundId(gameId, roundId);
                 r.Actions.Add(action.action);
@@ -824,7 +806,24 @@ namespace ProyectoAPIGrupoA.Controllers
                         g.Status = GameStatus.ended;
                         r.Status = roundStatus.ended;
                         BaseResponse br = new BaseResponse("Game ended", 200, r);
-                        return StatusCode(200, r);
+                        string jsonString3 = JsonConvert.SerializeObject(br, converter);
+
+                        JObject rss3 = JObject.Parse(jsonString3);
+                        JObject customers3 = (JObject)rss3.SelectToken("Data");
+
+                        //copiar Id y limpiar votes
+                        Util.Utility.cleanRound(customers3);
+
+                        //copiar leader
+                        JObject x5 = (JObject)customers3.SelectToken("Leader");
+                        string leaderValue3 = (string)customers3["Leader"]["PlayerName"];
+                        x5.Remove("Leader");
+                        customers3["Leader"] = leaderValue3;
+
+                        //copiar Jugadores
+                        Util.Utility.ConvertirObjetoPlayersAArray(rss3, "group");
+                        Util.Utility.ConvertirPropiedadesAMinuscula(rss3);
+                        return StatusCode(200, rss3);
                     }
                     r.Status = roundStatus.ended;
                     round r2 = new round(g.Id);
@@ -832,14 +831,30 @@ namespace ProyectoAPIGrupoA.Controllers
                     Util.Utility.roundList.Add(r2);
                     string leader = Util.Utility.getRandomLeader(g);
                     r2.Leader = new gamePlayerName(leader);
-                    BaseResponse br2 = new BaseResponse("round ended", 200, r2);
-                    return StatusCode(200, r2);
+
+
+                    BaseResponse br2 = new BaseResponse("round ended", 200, r);
+                    string jsonString2 = JsonConvert.SerializeObject(br2, converter);
+
+                    JObject rss2 = JObject.Parse(jsonString2);
+                    JObject customers2 = (JObject)rss2.SelectToken("Data");
+
+                    //copiar Id y limpiar votes
+                    Util.Utility.cleanRound(customers2);
+
+                    //copiar leader
+                    JObject x4 = (JObject)customers2.SelectToken("Leader");
+                    string leaderValue2 = (string)customers2["Leader"]["PlayerName"];
+                    x4.Remove("Leader");
+                    customers2["Leader"] = leaderValue2;
+
+                    //copiar Jugadores
+                    Util.Utility.ConvertirObjetoPlayersAArray(rss2, "group");
+                    Util.Utility.ConvertirPropiedadesAMinuscula(rss2);
+                    return StatusCode(200, rss2);
                 }
-                BaseResponse br4 = new BaseResponse("Action registered", 200, r);
-                var converter = new StringEnumConverter();
-
-
-                string jsonString = JsonConvert.SerializeObject(br4, converter);
+                BaseResponse br5 = new BaseResponse("Action registered", 200, r);
+                string jsonString = JsonConvert.SerializeObject(br5, converter);
 
                 JObject rss = JObject.Parse(jsonString);
                 JObject customers = (JObject)rss.SelectToken("Data");

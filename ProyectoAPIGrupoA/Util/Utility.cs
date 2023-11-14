@@ -388,7 +388,7 @@ namespace ProyectoAPIGrupoA.Util
             else if (gameInfo.Players.Count == 8)
             {
                 if (round.Count == 1)
-                {   
+                {
                     verify = "Requires a group of 3 members";
                 }
                 else if (round.Count == 2)
@@ -471,7 +471,7 @@ namespace ProyectoAPIGrupoA.Util
                     string json = JsonConvert.SerializeObject(roundList[i], converter);
                     JObject jsonObject = JObject.Parse(json);
                     roundL.Add(jsonObject);
-                }          
+                }
             }
 
             return roundL;
@@ -521,23 +521,10 @@ namespace ProyectoAPIGrupoA.Util
             }
 
         }
-        //public static bool verifyPlayersExist(Game game, GroupProposal group)
-        //{
-        //    bool gameExist = true;
-        //    for (int j = 0; j < group.Group.Count(); j++)
-        //    {
-        //        if (!game.Players.Contains(group.Group[j]))
-        //        {
-        //            gameExist = false;
-        //        }
-
-        //    }
-        //    return gameExist;
-        //}
 
         public static game getGameId(string gameId)
         {
-            game game=null;
+            game game = null;
             for (int i = 0; i < gameList.Count(); i++)
             {
                 if (gameList[i].Id.Id == gameId)
@@ -555,7 +542,7 @@ namespace ProyectoAPIGrupoA.Util
             round round = null;
             for (int i = 0; i < roundList.Count(); i++)
             {
-                if (roundList[i].GameId.Id == gameId&& roundList[i].Id.Id==roundId)
+                if (roundList[i].GameId.Id == gameId && roundList[i].Id.Id == roundId)
                 {
                     round = roundList[i];
                 }
@@ -625,7 +612,7 @@ namespace ProyectoAPIGrupoA.Util
             List<JObject> eL = new List<JObject>();
             if (existGame(name))
             {
-                errorMessage e = new errorMessage("Game already exists",400);
+                errorMessage e = new errorMessage("Game already exists", 400);
                 string json = JsonConvert.SerializeObject(e);
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
@@ -670,7 +657,7 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            
+
             return eL;
         }
         public static List<JObject> getJoinErrors(string? name, string? password, string id)
@@ -683,7 +670,7 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            if ( name == null || name.Length < 3 || name.Length > 20 )
+            if (name == null || name.Length < 3 || name.Length > 20)
             {
                 errorMessage e = new errorMessage("Invalid or missing player name", 400);
                 string json = JsonConvert.SerializeObject(e);
@@ -732,18 +719,18 @@ namespace ProyectoAPIGrupoA.Util
             }
             return eL;
         }
-        public static List<JObject> getSearchErrors(string? name,string? status, Int32? limit, Int32? page)
+        public static List<JObject> getSearchErrors(string? name, string? status, Int32? limit, Int32? page)
         {
             List<JObject> eL = new List<JObject>();
 
-            if (name!=null && (name.Length<3 || name.Length>10 || name == ""))
+            if (name != null && (name.Length < 3 || name.Length > 10 || name == ""))
             {
                 errorMessage e = new errorMessage("Invalid or missing game name", 400);
                 string json = JsonConvert.SerializeObject(e);
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            if (status != "lobby" && status != "rounds"&& status != "ended")
+            if (status != "lobby" && status != "rounds" && status != "ended")
             {
                 errorMessage e = new errorMessage("Invalid game status", 400);
                 string json = JsonConvert.SerializeObject(e);
@@ -757,7 +744,7 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 eL.Add(jsonObject);
             }
-            if (page <0)
+            if (page < 0)
             {
                 errorMessage e = new errorMessage("Invalid limit number", 400);
                 string json = JsonConvert.SerializeObject(e);
@@ -773,54 +760,19 @@ namespace ProyectoAPIGrupoA.Util
             bool allMembersInGame = group.group.All(member => game.Players.Any(player => player.PlayerName == member));
             return allMembersInGame;
         }
-        //        public static Group GetGroup(Game game, string name)
-        //        {
-        //            Group group = null;
-        //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
-        //            {
-        //                if (game.Rounds[getRounds(game)].Group[i].Name.Equals(name))
-        //                {
-        //                    group = game.Rounds[getRounds(game)].Group[i];
-        //                }
-
-
-        //            }
-        //            return group;
-
-        //        }
-        //        public static bool verifyAllGroupSelection(Game game)//Verifica si el grupo ya realizo todas sus elecciones
-        //        {
-        //            bool verify = false;
-        //            int count = 0;
-        //            for (int i = 0; i < game.Rounds[getRounds(game)].Group.Count(); i++)
-        //            {
-        //                if (game.Rounds[getRounds(game)].Group[i].Psycho!=null)
-        //                {
-        //                    count++;
-        //                }
-
-
-        //            }
-        //            if(count == game.Rounds[getRounds(game)].Group.Count())
-        //            {
-        //                verify = true;
-        //            }
-
-        //            return verify;
-        //        }
-        //       
 
         public static bool verifyPlayerInGroup(round r, string player)
         {
             bool verify = false;
 
-            for(int i = 0; i < r.Group.Count(); i++) {
+            for (int i = 0; i < r.Group.Count(); i++)
+            {
                 if (r.Group[i].PlayerName == player)
                 {
                     verify = true;
                     break;
                 }
-                
+
             }
             return verify;
         }
@@ -840,7 +792,7 @@ namespace ProyectoAPIGrupoA.Util
             int countEnemies = 0;
             for (int i = 0; i < roundList.Count(); i++)
             {
-                if (roundList[i].GameId==game.Id)
+                if (roundList[i].GameId == game.Id)
                 {
                     if (roundList[i].Result == roundResult.citizens)
                     {
@@ -850,7 +802,7 @@ namespace ProyectoAPIGrupoA.Util
                     {
                         countEnemies++;
                     }
-                }             
+                }
 
             }
             if (countCitizen == 3 || countEnemies == 3)
@@ -867,7 +819,7 @@ namespace ProyectoAPIGrupoA.Util
             return verify;
         }
 
-    public static int getpsychoscountAtStart(game game)
+        public static int getpsychoscountAtStart(game game)
         {
             if (game.Players.Count() == 5 || game.Players.Count() == 6)
             {
@@ -888,26 +840,28 @@ namespace ProyectoAPIGrupoA.Util
             bool verify = false;
             for (int i = 0; i < roundList.Count(); i++)
             {
-                if (roundList[i].Id.Id == roundId )
+                if (roundList[i].Id.Id == roundId)
                 {
                     if (roundList[i].AlreadyVote.Contains(player))
                     {
                         verify = true;
                     }
-                    
+
                 }
             }
             return verify;
         }
         static public void setRoundPhase(round r)
         {
-            if(r.Phase == roundPhase.vote1)
+            if (r.Phase == roundPhase.vote1)
             {
                 r.Phase = roundPhase.vote2;
-            }else if(r.Phase == roundPhase.vote2)
+            }
+            else if (r.Phase == roundPhase.vote2)
             {
                 r.Phase = roundPhase.vote3;
-            }else if(r.Phase != roundPhase.vote3)
+            }
+            else if (r.Phase != roundPhase.vote3)
             {
                 r.Phase = roundPhase.vote3;
             }
