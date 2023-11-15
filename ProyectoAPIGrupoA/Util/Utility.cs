@@ -561,14 +561,23 @@ namespace ProyectoAPIGrupoA.Util
                 // Si no se proporcionan limit o page válidos, o son valores negativos, retornar lista vacía
                 return gameL;
             }
+
             var filteredGames = gameList;
 
-            int startIndex = (int)(page * limit.Value);
-            int endIndex = startIndex + limit.Value;
+            // Filtrar por nombre si se proporciona
+            if (!string.IsNullOrEmpty(name))
+            {
+                filteredGames = filteredGames.Where(game => game.Name.Name == name).ToList();
+            }
+
+            // Filtrar por estado si se proporciona
             if (!string.IsNullOrEmpty(status))
             {
                 filteredGames = filteredGames.Where(game => game.Status.ToString() == status).ToList();
             }
+
+            int startIndex = (int)(page * limit.Value);
+            int endIndex = startIndex + limit.Value;
 
             // Asegurarse de que el índice de inicio no sea mayor que el tamaño de la lista
             if (startIndex >= filteredGames.Count)
@@ -589,6 +598,7 @@ namespace ProyectoAPIGrupoA.Util
                 JObject jsonObject = JObject.Parse(json);
                 gameL.Add(jsonObject);
             }
+
             return gameL;
         }
 
